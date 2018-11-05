@@ -312,7 +312,7 @@ namespace FvTwool
                     TextBox textBox = new TextBox();
                     textBox.Location = new System.Drawing.Point(showMeshGroupLabel.Right + 10, heightOffset);
                     textBox.Text = fv2String.showMeshGroupEntries[i];
-                    textBox.TextChanged += new EventHandler((object sender, EventArgs e) => UpdateString(sender, e, ref fv2String.hideMeshGroupEntries[index]));
+                    textBox.TextChanged += new EventHandler((object sender, EventArgs e) => UpdateString(sender, e, ref fv2String.showMeshGroupEntries[index]));
                     mainPanel.Controls.Add(textBox);
                     heightOffset += CONTROL_SPACING;
                 } //for
@@ -369,13 +369,13 @@ namespace FvTwool
                     textureComboBox.Location = new System.Drawing.Point(textureLabel.Right + 10, 16 + CONTROL_SPACING * 2);
                     try
                     {
-                        textureComboBox.SelectedIndex = fv2String.textureSwapEntries[i].textureName + 1;
+                        textureComboBox.SelectedIndex = fv2String.textureSwapEntries[i].textureIndex + 1;
                     } //try
                     catch
                     {
                         textureComboBox.SelectedIndex = 0;
                     } //catch
-                    textureComboBox.SelectedIndexChanged += new EventHandler((object sender, EventArgs e) => UpdateIndex(sender, e, ref fv2String.textureSwapEntries[index].textureName));
+                    textureComboBox.SelectedIndexChanged += new EventHandler((object sender, EventArgs e) => UpdateIndex(sender, e, ref fv2String.textureSwapEntries[index].textureIndex));
                     textureSwapGroupBox.Controls.Add(textureComboBox);
 
                     heightOffset += textureSwapGroupBox.Height + 3;
@@ -405,11 +405,18 @@ namespace FvTwool
                     fmdlLabel.Width = LABEL_WIDTH;
                     groupBox.Controls.Add(fmdlLabel);
 
-                    TextBox fmdlTextBox = new TextBox();
-                    fmdlTextBox.Location = new System.Drawing.Point(fmdlLabel.Right + 10, 16);
-                    fmdlTextBox.Text = fv2String.boneModelAttachEntries[i].fmdlIndex;
-                    fmdlTextBox.TextChanged += new EventHandler((object sender, EventArgs e) => UpdateString(sender, e, ref fv2String.boneModelAttachEntries[index].fmdlIndex));
-                    groupBox.Controls.Add(fmdlTextBox);
+                    ComboBox fmdlComboBox = GetExternalFileComboBox();
+                    fmdlComboBox.Location = new System.Drawing.Point(fmdlLabel.Right + 10, 16);
+                    try
+                    {
+                        fmdlComboBox.SelectedIndex = fv2String.boneModelAttachEntries[i].fmdlIndex + 1;
+                    } //try
+                    catch
+                    {
+                        fmdlComboBox.SelectedIndex = 0;
+                    } //catch
+                    fmdlComboBox.SelectedIndexChanged += new EventHandler((object sender, EventArgs e) => UpdateIndex(sender, e, ref fv2String.boneModelAttachEntries[index].fmdlIndex));
+                    groupBox.Controls.Add(fmdlComboBox);
 
                     Label frdvLabel = new Label();
                     frdvLabel.Location = new System.Drawing.Point(6, 16 + CONTROL_SPACING + LABEL_SPACING);
@@ -417,11 +424,18 @@ namespace FvTwool
                     frdvLabel.Width = LABEL_WIDTH;
                     groupBox.Controls.Add(frdvLabel);
 
-                    TextBox frdvTextBox = new TextBox();
-                    frdvTextBox.Location = new System.Drawing.Point(frdvLabel.Right + 10, 16 + CONTROL_SPACING);
-                    frdvTextBox.Text = fv2String.boneModelAttachEntries[i].frdvIndex;
-                    frdvTextBox.TextChanged += new EventHandler((object sender, EventArgs e) => UpdateString(sender, e, ref fv2String.boneModelAttachEntries[index].frdvIndex));
-                    groupBox.Controls.Add(frdvTextBox);
+                    ComboBox frdvComboBox = GetExternalFileComboBox();
+                    frdvComboBox.Location = new System.Drawing.Point(frdvLabel.Right + 10, 16 + CONTROL_SPACING);
+                    try
+                    {
+                        frdvComboBox.SelectedIndex = fv2String.boneModelAttachEntries[i].frdvIndex + 1;
+                    } //try
+                    catch
+                    {
+                        frdvComboBox.SelectedIndex = 0;
+                    } //catch
+                    frdvComboBox.SelectedIndexChanged += new EventHandler((object sender, EventArgs e) => UpdateIndex(sender, e, ref fv2String.boneModelAttachEntries[index].frdvIndex));
+                    groupBox.Controls.Add(frdvComboBox);
 
                     Label simLabel = new Label();
                     simLabel.Location = new System.Drawing.Point(6, 16 + CONTROL_SPACING * 2 + LABEL_SPACING);
@@ -429,11 +443,18 @@ namespace FvTwool
                     simLabel.Width = LABEL_WIDTH;
                     groupBox.Controls.Add(simLabel);
 
-                    TextBox simTextBox = new TextBox();
-                    simTextBox.Location = new System.Drawing.Point(simLabel.Right + 10, 16 + CONTROL_SPACING * 2);
-                    simTextBox.Text = fv2String.boneModelAttachEntries[i].simIndex;
-                    simTextBox.TextChanged += new EventHandler((object sender, EventArgs e) => UpdateString(sender, e, ref fv2String.boneModelAttachEntries[index].simIndex));
-                    groupBox.Controls.Add(simTextBox);
+                    ComboBox simComboBox = GetExternalFileComboBox();
+                    simComboBox.Location = new System.Drawing.Point(simLabel.Right + 10, 16 + CONTROL_SPACING * 2);
+                    try
+                    {
+                        simComboBox.SelectedIndex = fv2String.boneModelAttachEntries[i].simIndex + 1;
+                    } //try
+                    catch
+                    {
+                        simComboBox.SelectedIndex = 0;
+                    } //catch
+                    simComboBox.SelectedIndexChanged += new EventHandler((object sender, EventArgs e) => UpdateIndex(sender, e, ref fv2String.boneModelAttachEntries[index].simIndex));
+                    groupBox.Controls.Add(simComboBox);
 
                     heightOffset += groupBox.Height + 3;
                 } //for
@@ -474,11 +495,18 @@ namespace FvTwool
                     fmdlLabel.Width = LABEL_WIDTH;
                     groupBox.Controls.Add(fmdlLabel);
 
-                    TextBox fmdlTextBox = new TextBox();
-                    fmdlTextBox.Location = new System.Drawing.Point(fmdlLabel.Right + 10, 16 + CONTROL_SPACING);
-                    fmdlTextBox.Text = fv2String.cnpModelAttachEntries[i].fmdlIndex;
-                    fmdlTextBox.TextChanged += new EventHandler((object sender, EventArgs e) => UpdateString(sender, e, ref fv2String.cnpModelAttachEntries[index].fmdlIndex));
-                    groupBox.Controls.Add(fmdlTextBox);
+                    ComboBox fmdlComboBox = GetExternalFileComboBox();
+                    fmdlComboBox.Location = new System.Drawing.Point(fmdlLabel.Right + 10, 16 + CONTROL_SPACING);
+                    try
+                    {
+                        fmdlComboBox.SelectedIndex = fv2String.cnpModelAttachEntries[i].fmdlIndex + 1;
+                    } //try
+                    catch
+                    {
+                        fmdlComboBox.SelectedIndex = 0;
+                    } //catch
+                    fmdlComboBox.SelectedIndexChanged += new EventHandler((object sender, EventArgs e) => UpdateIndex(sender, e, ref fv2String.cnpModelAttachEntries[index].fmdlIndex));
+                    groupBox.Controls.Add(fmdlComboBox);
 
                     Label frdvLabel = new Label();
                     frdvLabel.Location = new System.Drawing.Point(6, 16 + CONTROL_SPACING * 2 + LABEL_SPACING);
@@ -486,11 +514,18 @@ namespace FvTwool
                     frdvLabel.Width = LABEL_WIDTH;
                     groupBox.Controls.Add(frdvLabel);
 
-                    TextBox frdvTextBox = new TextBox();
-                    frdvTextBox.Location = new System.Drawing.Point(frdvLabel.Right + 10, 16 + CONTROL_SPACING * 2);
-                    frdvTextBox.Text = fv2String.cnpModelAttachEntries[i].frdvIndex;
-                    frdvTextBox.TextChanged += new EventHandler((object sender, EventArgs e) => UpdateString(sender, e, ref fv2String.cnpModelAttachEntries[index].frdvIndex));
-                    groupBox.Controls.Add(frdvTextBox);
+                    ComboBox frdvComboBox = GetExternalFileComboBox();
+                    frdvComboBox.Location = new System.Drawing.Point(frdvLabel.Right + 10, 16 + CONTROL_SPACING * 2);
+                    try
+                    {
+                        frdvComboBox.SelectedIndex = fv2String.cnpModelAttachEntries[i].frdvIndex + 1;
+                    } //try
+                    catch
+                    {
+                        frdvComboBox.SelectedIndex = 0;
+                    } //catch
+                    frdvComboBox.SelectedIndexChanged += new EventHandler((object sender, EventArgs e) => UpdateIndex(sender, e, ref fv2String.cnpModelAttachEntries[index].frdvIndex));
+                    groupBox.Controls.Add(frdvComboBox);
 
                     Label simLabel = new Label();
                     simLabel.Location = new System.Drawing.Point(6, 16 + CONTROL_SPACING * 3 + LABEL_SPACING);
@@ -498,11 +533,18 @@ namespace FvTwool
                     simLabel.Width = LABEL_WIDTH;
                     groupBox.Controls.Add(simLabel);
 
-                    TextBox simTextBox = new TextBox();
-                    simTextBox.Location = new System.Drawing.Point(simLabel.Right + 10, 16 + CONTROL_SPACING * 3);
-                    simTextBox.Text = fv2String.cnpModelAttachEntries[i].simIndex;
-                    simTextBox.TextChanged += new EventHandler((object sender, EventArgs e) => UpdateString(sender, e, ref fv2String.cnpModelAttachEntries[index].simIndex));
-                    groupBox.Controls.Add(simTextBox);
+                    ComboBox simComboBox = GetExternalFileComboBox();
+                    simComboBox.Location = new System.Drawing.Point(simLabel.Right + 10, 16 + CONTROL_SPACING * 3);
+                    try
+                    {
+                        simComboBox.SelectedIndex = fv2String.cnpModelAttachEntries[i].simIndex + 1;
+                    } //try
+                    catch
+                    {
+                        simComboBox.SelectedIndex = 0;
+                    } //catch
+                    simComboBox.SelectedIndexChanged += new EventHandler((object sender, EventArgs e) => UpdateIndex(sender, e, ref fv2String.cnpModelAttachEntries[index].simIndex));
+                    groupBox.Controls.Add(simComboBox);
 
                     heightOffset += groupBox.Height + 3;
                 } //for
@@ -603,13 +645,13 @@ namespace FvTwool
                         textureComboBox.Location = new System.Drawing.Point(textureLabel.Right + 10, 16 + CONTROL_SPACING * 2);
                         try
                         {
-                            textureComboBox.SelectedIndex = variableDataEntry.variableDataSubEntries[j].textureSwapEntries[i].textureName + 1;
+                            textureComboBox.SelectedIndex = variableDataEntry.variableDataSubEntries[j].textureSwapEntries[i].textureIndex + 1;
                         } //try
                         catch
                         {
                             textureComboBox.SelectedIndex = 0;
                         } //catch
-                        textureComboBox.SelectedIndexChanged += new EventHandler((object sender, EventArgs e) => UpdateIndex(sender, e, ref variableDataEntry.variableDataSubEntries[index0].textureSwapEntries[index1].textureName));
+                        textureComboBox.SelectedIndexChanged += new EventHandler((object sender, EventArgs e) => UpdateIndex(sender, e, ref variableDataEntry.variableDataSubEntries[index0].textureSwapEntries[index1].textureIndex));
                         textureSwapGroupBox.Controls.Add(textureComboBox);
 
                         heightOffset += textureSwapGroupBox.Height + 3;
@@ -639,11 +681,18 @@ namespace FvTwool
                         fmdlLabel.Width = LABEL_WIDTH;
                         boneAttachGroupBox.Controls.Add(fmdlLabel);
 
-                        TextBox fmdlTextBox = new TextBox();
-                        fmdlTextBox.Location = new System.Drawing.Point(fmdlLabel.Right + 10, 16);
-                        fmdlTextBox.Text = variableDataEntry.variableDataSubEntries[j].boneModelAttachEntries[i].fmdlIndex;
-                        fmdlTextBox.TextChanged += new EventHandler((object sender, EventArgs e) => UpdateString(sender, e, ref variableDataEntry.variableDataSubEntries[index0].boneModelAttachEntries[index1].fmdlIndex));
-                        boneAttachGroupBox.Controls.Add(fmdlTextBox);
+                        ComboBox fmdlComboBox = GetExternalFileComboBox();
+                        fmdlComboBox.Location = new System.Drawing.Point(fmdlLabel.Right + 10, 16);
+                        try
+                        {
+                            fmdlComboBox.SelectedIndex = variableDataEntry.variableDataSubEntries[j].boneModelAttachEntries[i].fmdlIndex + 1;
+                        } //try
+                        catch
+                        {
+                            fmdlComboBox.SelectedIndex = 0;
+                        } //catch
+                        fmdlComboBox.SelectedIndexChanged += new EventHandler((object sender, EventArgs e) => UpdateIndex(sender, e, ref variableDataEntry.variableDataSubEntries[index0].boneModelAttachEntries[index1].fmdlIndex));
+                        boneAttachGroupBox.Controls.Add(fmdlComboBox);
 
                         Label frdvLabel = new Label();
                         frdvLabel.Location = new System.Drawing.Point(6, 16 + CONTROL_SPACING + LABEL_SPACING);
@@ -651,11 +700,18 @@ namespace FvTwool
                         frdvLabel.Width = LABEL_WIDTH;
                         boneAttachGroupBox.Controls.Add(frdvLabel);
 
-                        TextBox frdvTextBox = new TextBox();
-                        frdvTextBox.Location = new System.Drawing.Point(frdvLabel.Right + 10, 16 + CONTROL_SPACING);
-                        frdvTextBox.Text = variableDataEntry.variableDataSubEntries[j].boneModelAttachEntries[i].frdvIndex;
-                        frdvTextBox.TextChanged += new EventHandler((object sender, EventArgs e) => UpdateString(sender, e, ref variableDataEntry.variableDataSubEntries[index0].boneModelAttachEntries[index1].frdvIndex));
-                        boneAttachGroupBox.Controls.Add(frdvTextBox);
+                        ComboBox frdvComboBox = GetExternalFileComboBox();
+                        frdvComboBox.Location = new System.Drawing.Point(frdvLabel.Right + 10, 16 + CONTROL_SPACING);
+                        try
+                        {
+                            frdvComboBox.SelectedIndex = variableDataEntry.variableDataSubEntries[j].boneModelAttachEntries[i].frdvIndex + 1;
+                        } //try
+                        catch
+                        {
+                            frdvComboBox.SelectedIndex = 0;
+                        } //catch
+                        frdvComboBox.SelectedIndexChanged += new EventHandler((object sender, EventArgs e) => UpdateIndex(sender, e, ref variableDataEntry.variableDataSubEntries[index0].boneModelAttachEntries[index1].frdvIndex));
+                        boneAttachGroupBox.Controls.Add(frdvComboBox);
 
                         Label simLabel = new Label();
                         simLabel.Location = new System.Drawing.Point(6, 16 + CONTROL_SPACING * 2 + LABEL_SPACING);
@@ -663,11 +719,18 @@ namespace FvTwool
                         simLabel.Width = LABEL_WIDTH;
                         boneAttachGroupBox.Controls.Add(simLabel);
 
-                        TextBox simTextBox = new TextBox();
-                        simTextBox.Location = new System.Drawing.Point(simLabel.Right + 10, 16 + CONTROL_SPACING * 2);
-                        simTextBox.Text = variableDataEntry.variableDataSubEntries[j].boneModelAttachEntries[i].simIndex;
-                        simTextBox.TextChanged += new EventHandler((object sender, EventArgs e) => UpdateString(sender, e, ref variableDataEntry.variableDataSubEntries[index0].boneModelAttachEntries[index1].simIndex));
-                        boneAttachGroupBox.Controls.Add(simTextBox);
+                        ComboBox simComboBox = GetExternalFileComboBox();
+                        simComboBox.Location = new System.Drawing.Point(simLabel.Right + 10, 16 + CONTROL_SPACING * 2);
+                        try
+                        {
+                            simComboBox.SelectedIndex = variableDataEntry.variableDataSubEntries[j].boneModelAttachEntries[i].simIndex + 1;
+                        } //try
+                        catch
+                        {
+                            simComboBox.SelectedIndex = 0;
+                        } //catch
+                        simComboBox.SelectedIndexChanged += new EventHandler((object sender, EventArgs e) => UpdateIndex(sender, e, ref variableDataEntry.variableDataSubEntries[index0].boneModelAttachEntries[index1].simIndex));
+                        boneAttachGroupBox.Controls.Add(simComboBox);
 
                         heightOffset += boneAttachGroupBox.Height + 3;
                     } //for
@@ -708,11 +771,18 @@ namespace FvTwool
                         fmdlLabel.Width = LABEL_WIDTH;
                         cnpAttachGroupBox.Controls.Add(fmdlLabel);
 
-                        TextBox fmdlTextBox = new TextBox();
-                        fmdlTextBox.Location = new System.Drawing.Point(fmdlLabel.Right + 10, 16 + CONTROL_SPACING);
-                        fmdlTextBox.Text = variableDataEntry.variableDataSubEntries[j].cnpModelAttachEntries[i].fmdlIndex;
-                        fmdlTextBox.TextChanged += new EventHandler((object sender, EventArgs e) => UpdateString(sender, e, ref variableDataEntry.variableDataSubEntries[index0].cnpModelAttachEntries[index1].fmdlIndex));
-                        cnpAttachGroupBox.Controls.Add(fmdlTextBox);
+                        ComboBox fmdlComboBox = GetExternalFileComboBox();
+                        fmdlComboBox.Location = new System.Drawing.Point(fmdlLabel.Right + 10, 16 + CONTROL_SPACING);
+                        try
+                        {
+                            fmdlComboBox.SelectedIndex = variableDataEntry.variableDataSubEntries[j].cnpModelAttachEntries[i].fmdlIndex + 1;
+                        } //try
+                        catch
+                        {
+                            fmdlComboBox.SelectedIndex = 0;
+                        } //catch
+                        fmdlComboBox.SelectedIndexChanged += new EventHandler((object sender, EventArgs e) => UpdateIndex(sender, e, ref variableDataEntry.variableDataSubEntries[index0].cnpModelAttachEntries[index1].fmdlIndex));
+                        cnpAttachGroupBox.Controls.Add(fmdlComboBox);
 
                         Label frdvLabel = new Label();
                         frdvLabel.Location = new System.Drawing.Point(6, 16 + CONTROL_SPACING * 2 + LABEL_SPACING);
@@ -720,11 +790,18 @@ namespace FvTwool
                         frdvLabel.Width = LABEL_WIDTH;
                         cnpAttachGroupBox.Controls.Add(frdvLabel);
 
-                        TextBox frdvTextBox = new TextBox();
-                        frdvTextBox.Location = new System.Drawing.Point(frdvLabel.Right + 10, 16 + CONTROL_SPACING * 2);
-                        frdvTextBox.Text = variableDataEntry.variableDataSubEntries[j].cnpModelAttachEntries[i].frdvIndex;
-                        frdvTextBox.TextChanged += new EventHandler((object sender, EventArgs e) => UpdateString(sender, e, ref variableDataEntry.variableDataSubEntries[index0].cnpModelAttachEntries[index1].frdvIndex));
-                        cnpAttachGroupBox.Controls.Add(frdvTextBox);
+                        ComboBox frdvComboBox = GetExternalFileComboBox();
+                        frdvComboBox.Location = new System.Drawing.Point(frdvLabel.Right + 10, 16 + CONTROL_SPACING * 2);
+                        try
+                        {
+                            frdvComboBox.SelectedIndex = variableDataEntry.variableDataSubEntries[j].cnpModelAttachEntries[i].frdvIndex + 1;
+                        } //try
+                        catch
+                        {
+                            frdvComboBox.SelectedIndex = 0;
+                        } //catch
+                        frdvComboBox.SelectedIndexChanged += new EventHandler((object sender, EventArgs e) => UpdateIndex(sender, e, ref variableDataEntry.variableDataSubEntries[index0].cnpModelAttachEntries[index1].frdvIndex));
+                        cnpAttachGroupBox.Controls.Add(frdvComboBox);
 
                         Label simLabel = new Label();
                         simLabel.Location = new System.Drawing.Point(6, 16 + CONTROL_SPACING * 3 + LABEL_SPACING);
@@ -732,11 +809,18 @@ namespace FvTwool
                         simLabel.Width = LABEL_WIDTH;
                         cnpAttachGroupBox.Controls.Add(simLabel);
 
-                        TextBox simTextBox = new TextBox();
-                        simTextBox.Location = new System.Drawing.Point(simLabel.Right + 10, 16 + CONTROL_SPACING * 3);
-                        simTextBox.Text = variableDataEntry.variableDataSubEntries[j].cnpModelAttachEntries[i].simIndex;
-                        simTextBox.TextChanged += new EventHandler((object sender, EventArgs e) => UpdateString(sender, e, ref variableDataEntry.variableDataSubEntries[index0].cnpModelAttachEntries[index1].simIndex));
-                        cnpAttachGroupBox.Controls.Add(simTextBox);
+                        ComboBox simComboBox = GetExternalFileComboBox();
+                        simComboBox.Location = new System.Drawing.Point(simLabel.Right + 10, 16 + CONTROL_SPACING * 3);
+                        try
+                        {
+                            simComboBox.SelectedIndex = variableDataEntry.variableDataSubEntries[j].cnpModelAttachEntries[i].simIndex + 1;
+                        } //try
+                        catch
+                        {
+                            simComboBox.SelectedIndex = 0;
+                        } //catch
+                        simComboBox.SelectedIndexChanged += new EventHandler((object sender, EventArgs e) => UpdateIndex(sender, e, ref variableDataEntry.variableDataSubEntries[index0].cnpModelAttachEntries[index1].simIndex));
+                        cnpAttachGroupBox.Controls.Add(simComboBox);
 
                         heightOffset += cnpAttachGroupBox.Height + 3;
                     } //for
@@ -837,5 +921,19 @@ namespace FvTwool
             cnpAttachTextBox.TextChanged += new EventHandler((object sender0, EventArgs e0) => UpdateVariableDataEntryControls(variableDataEntry));
             groupBox.Controls.Add(cnpAttachTextBox);
         } //UpdateVariableDataEntryGroupBox
+
+        private void ExportButton_Click(object sender, EventArgs e)
+        {
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+            saveFileDialog.Filter =  "Form Variation|.fv2";
+            saveFileDialog.Title = "Choose an output location";
+
+            if(saveFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                Fv2 fv2 = new Fv2();
+                fv2.GetDataFromFv2String(fv2String);
+                fv2.Write(saveFileDialog.FileName);
+            } //if
+        } //exportButton_Click
     } //class
 } //namespace

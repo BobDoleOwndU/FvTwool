@@ -49,6 +49,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Static\ExtensionMethods.cs" />
     <Compile Include="Static\Hashing.cs" />
     <Compile Include="Static\Utils.cs" />
     <Compile Include="Fv2String.cs" />

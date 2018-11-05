@@ -6,16 +6,16 @@
         {
             public string materialInstanceName;
             public string textureTypeName;
-            public int textureName;
+            public int textureIndex;
         } //struct
 
         public struct BoneModelAttachEntry
         {
-            public string fmdlIndex;
-            public string frdvIndex;
+            public int fmdlIndex;
+            public int frdvIndex;
             //public string unknownIndex0;
             //public string unknownIndex1;
-            public string simIndex;
+            public int simIndex;
             //public string unknownIndex2;
         } //struct
 
@@ -23,11 +23,11 @@
         {
             public string cnpStrCode32;
             //public string emptyStrCode32;
-            public string fmdlIndex;
-            public string frdvIndex;
+            public int fmdlIndex;
+            public int frdvIndex;
             //public string unknownIndex0;
             //public string unknownIndex1;
-            public string simIndex;
+            public int simIndex;
             //public string unknownIndex2;
         } //struct
 
