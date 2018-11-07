@@ -261,15 +261,45 @@ namespace FvTwool
             textureCount = 0;
 
             for (int i = 0; i < hideMeshGroupEntries.Length; i++)
-                hideMeshGroupEntries[i] = (uint)Hashing.HashFileNameLegacy(fv2String.hideMeshGroupEntries[i]);
+                try
+                {
+                    hideMeshGroupEntries[i] = (uint)UInt64.Parse(fv2String.hideMeshGroupEntries[i], System.Globalization.NumberStyles.HexNumber);
+                } //try
+                catch
+                {
+                    hideMeshGroupEntries[i] = (uint)Hashing.HashFileNameLegacy(fv2String.hideMeshGroupEntries[i]);
+                } //catch
 
             for (int i = 0; i < showMeshGroupEntries.Length; i++)
-                showMeshGroupEntries[i] = (uint)Hashing.HashFileNameLegacy(fv2String.showMeshGroupEntries[i]);
+                try
+                {
+                    showMeshGroupEntries[i] = (uint)UInt64.Parse(fv2String.showMeshGroupEntries[i], System.Globalization.NumberStyles.HexNumber);
+                } //try
+                catch
+                {
+                    showMeshGroupEntries[i] = (uint)Hashing.HashFileNameLegacy(fv2String.showMeshGroupEntries[i]);
+                } //catch
 
             for (int i = 0; i < textureSwapEntries.Length; i++)
             {
-                textureSwapEntries[i].materialInstanceStrCode32 = (uint)Hashing.HashFileNameLegacy(fv2String.textureSwapEntries[i].materialInstanceName);
-                textureSwapEntries[i].textureTypeStrCode32 = (uint)Hashing.HashFileNameLegacy(fv2String.textureSwapEntries[i].textureTypeName);
+                try
+                {
+                    textureSwapEntries[i].materialInstanceStrCode32 = (uint)UInt64.Parse(fv2String.textureSwapEntries[i].materialInstanceName, System.Globalization.NumberStyles.HexNumber);
+                } //try
+                catch
+                {
+                    textureSwapEntries[i].materialInstanceStrCode32 = (uint)Hashing.HashFileNameLegacy(fv2String.textureSwapEntries[i].materialInstanceName);
+                } //catch
+
+                try
+                {
+                    textureSwapEntries[i].textureTypeStrCode32 = (uint)UInt64.Parse(fv2String.textureSwapEntries[i].textureTypeName, System.Globalization.NumberStyles.HexNumber);
+                } //try
+                catch
+                {
+                    textureSwapEntries[i].textureTypeStrCode32 = (uint)Hashing.HashFileNameLegacy(fv2String.textureSwapEntries[i].textureTypeName);
+                } //catch
+
                 textureSwapEntries[i].textureIndex = (short)fv2String.textureSwapEntries[i].textureIndex;
                 textureSwapEntries[i].unknown0 = -1;
             } //for
@@ -286,7 +316,15 @@ namespace FvTwool
 
             for (int i = 0; i < cnpModelAttachEntries.Length; i++)
             {
-                cnpModelAttachEntries[i].cnpStrCode32 = (uint)Hashing.HashFileNameLegacy(fv2String.cnpModelAttachEntries[i].cnpStrCode32);
+                try
+                {
+                    cnpModelAttachEntries[i].cnpStrCode32 = (uint)UInt64.Parse(fv2String.cnpModelAttachEntries[i].cnpStrCode32, System.Globalization.NumberStyles.HexNumber);
+                } //try
+                catch
+                {
+                    cnpModelAttachEntries[i].cnpStrCode32 = (uint)Hashing.HashFileNameLegacy(fv2String.cnpModelAttachEntries[i].cnpStrCode32);
+                } //catch
+
                 cnpModelAttachEntries[i].emptyStrCode32 = 0xBF169F98;
                 cnpModelAttachEntries[i].fmdlIndex = (short)fv2String.cnpModelAttachEntries[i].fmdlIndex;
                 cnpModelAttachEntries[i].frdvIndex = (short)fv2String.cnpModelAttachEntries[i].frdvIndex;
@@ -316,13 +354,36 @@ namespace FvTwool
                     variableDataEntries[i].variableDataSubEntries[j].boneModelAttachEntries = new BoneModelAttachEntry[variableDataEntries[i].boneModelAttachmentCount];
                     variableDataEntries[i].variableDataSubEntries[j].cnpModelAttachEntries = new CnpModelAttachEntry[variableDataEntries[i].cnpModelAttachmentCount];
 
-                    for(int k = 0; k < variableDataEntries[i].meshGroupCount; k++)
-                        variableDataEntries[i].variableDataSubEntries[j].meshGroupEntries[k] = (uint)Hashing.HashFileNameLegacy(fv2String.variableDataEntries[i].variableDataSubEntries[j].meshGroupEntries[k]);
+                    for (int k = 0; k < variableDataEntries[i].meshGroupCount; k++)
+                        try
+                        {
+                            variableDataEntries[i].variableDataSubEntries[j].meshGroupEntries[k] = (uint)UInt64.Parse(fv2String.variableDataEntries[i].variableDataSubEntries[j].meshGroupEntries[k], System.Globalization.NumberStyles.HexNumber);
+                        } //try
+                        catch
+                        {
+                            variableDataEntries[i].variableDataSubEntries[j].meshGroupEntries[k] = (uint)Hashing.HashFileNameLegacy(fv2String.variableDataEntries[i].variableDataSubEntries[j].meshGroupEntries[k]);
+                        } //catch
 
                     for(int k = 0; k < variableDataEntries[i].textureSwapCount; k++)
                     {
-                        variableDataEntries[i].variableDataSubEntries[j].textureSwapEntries[k].materialInstanceStrCode32 = (uint)Hashing.HashFileNameLegacy(fv2String.variableDataEntries[i].variableDataSubEntries[j].textureSwapEntries[k].materialInstanceName);
-                        variableDataEntries[i].variableDataSubEntries[j].textureSwapEntries[k].textureTypeStrCode32 = (uint)Hashing.HashFileNameLegacy(fv2String.variableDataEntries[i].variableDataSubEntries[j].textureSwapEntries[k].textureTypeName);
+                        try
+                        {
+                            variableDataEntries[i].variableDataSubEntries[j].textureSwapEntries[k].materialInstanceStrCode32 = (uint)UInt64.Parse(fv2String.variableDataEntries[i].variableDataSubEntries[j].textureSwapEntries[k].materialInstanceName, System.Globalization.NumberStyles.HexNumber);
+                        } //try
+                        catch
+                        {
+                            variableDataEntries[i].variableDataSubEntries[j].textureSwapEntries[k].materialInstanceStrCode32 = (uint)Hashing.HashFileNameLegacy(fv2String.variableDataEntries[i].variableDataSubEntries[j].textureSwapEntries[k].materialInstanceName);
+                        } //catch
+
+                        try
+                        {
+                            variableDataEntries[i].variableDataSubEntries[j].textureSwapEntries[k].textureTypeStrCode32 = (uint)UInt64.Parse(fv2String.variableDataEntries[i].variableDataSubEntries[j].textureSwapEntries[k].textureTypeName, System.Globalization.NumberStyles.HexNumber);
+                        } //try
+                        catch
+                        {
+                            variableDataEntries[i].variableDataSubEntries[j].textureSwapEntries[k].textureTypeStrCode32 = (uint)Hashing.HashFileNameLegacy(fv2String.variableDataEntries[i].variableDataSubEntries[j].textureSwapEntries[k].textureTypeName);
+                        } //catch
+                        
                         variableDataEntries[i].variableDataSubEntries[j].textureSwapEntries[k].textureIndex = (short)fv2String.variableDataEntries[i].variableDataSubEntries[j].textureSwapEntries[k].textureIndex;
                         variableDataEntries[i].variableDataSubEntries[j].textureSwapEntries[k].unknown0 = -1;
                     } //for
@@ -339,7 +400,15 @@ namespace FvTwool
 
                     for (int k = 0; k < variableDataEntries[i].cnpModelAttachmentCount; k++)
                     {
-                        variableDataEntries[i].variableDataSubEntries[j].cnpModelAttachEntries[k].cnpStrCode32 = (uint)Hashing.HashFileNameLegacy(fv2String.variableDataEntries[i].variableDataSubEntries[j].cnpModelAttachEntries[k].cnpStrCode32);
+                        try
+                        {
+                            variableDataEntries[i].variableDataSubEntries[j].cnpModelAttachEntries[k].cnpStrCode32 = (uint)UInt64.Parse(fv2String.variableDataEntries[i].variableDataSubEntries[j].cnpModelAttachEntries[k].cnpStrCode32, System.Globalization.NumberStyles.HexNumber);
+                        } //try
+                        catch
+                        {
+                            variableDataEntries[i].variableDataSubEntries[j].cnpModelAttachEntries[k].cnpStrCode32 = (uint)Hashing.HashFileNameLegacy(fv2String.variableDataEntries[i].variableDataSubEntries[j].cnpModelAttachEntries[k].cnpStrCode32);
+                        } //catch
+
                         variableDataEntries[i].variableDataSubEntries[j].cnpModelAttachEntries[k].emptyStrCode32 = 0xBF169F98;
                         variableDataEntries[i].variableDataSubEntries[j].cnpModelAttachEntries[k].fmdlIndex = (short)fv2String.variableDataEntries[i].variableDataSubEntries[j].cnpModelAttachEntries[k].fmdlIndex;
                         variableDataEntries[i].variableDataSubEntries[j].cnpModelAttachEntries[k].frdvIndex = (short)fv2String.variableDataEntries[i].variableDataSubEntries[j].cnpModelAttachEntries[k].frdvIndex;
@@ -353,7 +422,14 @@ namespace FvTwool
 
             for (int i = 0; i < externalFileEntries.Length; i++)
             {
-                externalFileEntries[i] = Hashing.HashFileNameWithExtension(fv2String.externalFiles[i]);
+                try
+                {
+                    externalFileEntries[i] = UInt64.Parse(fv2String.externalFiles[i], System.Globalization.NumberStyles.HexNumber);
+                } //try
+                catch
+                {
+                    externalFileEntries[i] = Hashing.HashFileNameWithExtension(fv2String.externalFiles[i]);
+                } //catch
 
                 if (fv2String.externalFiles[i].Contains(".ftex"))
                     textureCount++;

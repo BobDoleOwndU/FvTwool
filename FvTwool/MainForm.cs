@@ -925,7 +925,7 @@ namespace FvTwool
         private void ExportButton_Click(object sender, EventArgs e)
         {
             SaveFileDialog saveFileDialog = new SaveFileDialog();
-            saveFileDialog.Filter =  "Form Variation|.fv2";
+            saveFileDialog.Filter =  "Form Variation|*.fv2";
             saveFileDialog.Title = "Choose an output location";
 
             if(saveFileDialog.ShowDialog() == DialogResult.OK)
