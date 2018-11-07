@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Windows.Forms;
 
 namespace FvTwool
@@ -27,6 +28,7 @@ namespace FvTwool
             comboBox.Items.Add("None");
             comboBox.Items.AddRange(fv2String.externalFiles);
             comboBox.DropDownStyle = ComboBoxStyle.DropDownList;
+            comboBox.DropDownWidth = 300;
             return comboBox;
         } //GetExternalFileComboBox
 
@@ -198,6 +200,8 @@ namespace FvTwool
             groupBox1.Controls.Add(groupBox2);
 
             UpdateComboBox(ref variableDataSelectionComboBox);
+
+            mainPanel.Controls.Clear();
         } //ShowVariableDataControls
 
         private void TargetComboBox_SelectedIndexChanged(object sender, EventArgs e)
@@ -249,6 +253,7 @@ namespace FvTwool
                     textBox.Location = new System.Drawing.Point(label.Right + 10, heightOffset);
                     textBox.Text = fv2String.externalFiles[i];
                     textBox.TextChanged += new EventHandler((object sender, EventArgs e) => UpdateString(sender, e, ref fv2String.externalFiles[index]));
+                    textBox.Width = 300;
                     mainPanel.Controls.Add(textBox);
 
                     heightOffset += CONTROL_SPACING;
@@ -262,6 +267,15 @@ namespace FvTwool
 
             i = comboBox.SelectedIndex - 1;
         } //UpdateIndex
+
+        private void UpdateHexInt(object sender, EventArgs e, ref int i)
+        {
+            int textValue;
+            TextBox textBox = (TextBox)sender;
+
+            if (Int32.TryParse(textBox.Text, NumberStyles.HexNumber, new NumberFormatInfo(), out textValue))
+                i = textValue;
+        } //UpdateInt
 
         private void UpdateInt(object sender, EventArgs e, ref int i)
         {
@@ -844,8 +858,8 @@ namespace FvTwool
 
             TextBox typeTextBox = new TextBox();
             typeTextBox.Location = new System.Drawing.Point(typeLabel.Right + 10, 16);
-            typeTextBox.Text = variableDataEntry.type.ToString();
-            typeTextBox.TextChanged += new EventHandler((object sender0, EventArgs e0) => UpdateInt(sender0, e0, ref variableDataEntry.type));
+            typeTextBox.Text = variableDataEntry.type.ToString("x");
+            typeTextBox.TextChanged += new EventHandler((object sender0, EventArgs e0) => UpdateHexInt(sender0, e0, ref variableDataEntry.type));
             groupBox.Controls.Add(typeTextBox);
 
             Label entryCountLabel = new Label();

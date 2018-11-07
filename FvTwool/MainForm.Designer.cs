@@ -49,7 +49,7 @@
             this.mainPanel.AutoScroll = true;
             this.mainPanel.Location = new System.Drawing.Point(287, 12);
             this.mainPanel.Name = "mainPanel";
-            this.mainPanel.Size = new System.Drawing.Size(501, 495);
+            this.mainPanel.Size = new System.Drawing.Size(585, 495);
             this.mainPanel.TabIndex = 1;
             // 
             // targetLabel
@@ -89,7 +89,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 548);
+            this.ClientSize = new System.Drawing.Size(884, 548);
             this.Controls.Add(this.exportButton);
             this.Controls.Add(this.targetComboBox);
             this.Controls.Add(this.targetLabel);
