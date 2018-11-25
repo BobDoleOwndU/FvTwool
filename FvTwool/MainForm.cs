@@ -948,6 +948,23 @@ namespace FvTwool
                 fv2.GetDataFromFv2String(fv2String);
                 fv2.Write(saveFileDialog.FileName);
             } //if
-        } //exportButton_Click
+        } //ExportButton_Click
+
+        private void ImportButton_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "Form Variation|*.fv2";
+            openFileDialog.Title = "Select a file";
+
+            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                Fv2 fv2 = new Fv2();
+                fv2.Read(openFileDialog.FileName);
+                fv2String.GetDataFromFv2(fv2);
+
+                targetComboBox.SelectedIndex = 0;
+                ShowStaticDataControls();
+            } //if
+        } //ImportButton_Click
     } //class
 } //namespace

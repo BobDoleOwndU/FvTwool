@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace FvTwool
@@ -7,6 +8,9 @@ namespace FvTwool
     public static class Hashing
     {
         public const ulong MetaFlag = 0x4000000000000;
+
+        private static Dictionary<ulong, string> qarDict = new Dictionary<ulong, string>();
+        private static Dictionary<uint, string> fmdlDict = new Dictionary<uint, string>();
 
         private static readonly List<string> FileExtensions = new List<string>
         {
@@ -152,6 +156,14 @@ namespace FvTwool
 
         private static readonly Dictionary<ulong, string> ExtensionsMap = FileExtensions.ToDictionary(HashFileExtension);
 
+        static Hashing()
+        {
+            if (File.Exists("qar_dictionary.txt"))
+                ReadQARDictionary("qar_dictionary.txt");
+            if (File.Exists("fmdl_dictionary.txt"))
+                ReadFmdlDictionary("fmdl_dictionary.txt");
+        } //constructor
+
         public static ulong HashFileExtension(string fileExtension) //from private to public
         {
             return HashFileName(fileExtension, false) & 0x1FFF;
@@ -247,5 +259,52 @@ namespace FvTwool
         {
             return filePath.Replace("\\", "/");
         } //DenormalizeFilePath
+
+        public static void ReadFmdlDictionary(string path)
+        {
+            foreach (string line in File.ReadAllLines(path))
+            {
+                ulong hash = HashFileNameLegacy(line);
+
+                if (fmdlDict.ContainsKey((uint)hash) == false)
+                    fmdlDict.Add((uint)hash, line);
+            } //foreach
+        } //ReadFmdlDictionary
+
+        public static void ReadQARDictionary(string path)
+        {
+            foreach (string line in File.ReadAllLines(path))
+            {
+                ulong hash = HashFileName(line) & 0x3FFFFFFFFFFFF;
+
+                if (!qarDict.ContainsKey(hash))
+                    qarDict.Add(hash, line);
+            } //foreach
+        } //ReadQARDictionary
+
+        public static string TryGetQarName(ulong hash)
+        {
+            ulong extensionHash = hash >> 51;
+            string extension;
+            string name;
+            ulong hashWithoutExtenstion = hash & 0x3FFFFFFFFFFFF;
+
+            ExtensionsMap.TryGetValue(extensionHash, out extension);
+
+            if (qarDict.TryGetValue(hashWithoutExtenstion, out name))
+                return $"{name}.{extension}";
+
+            return hash.ToString("x");
+        } //TryGetQarName
+
+        public static string TryGetFmdlName(uint hash)
+        {
+            string name;
+
+            if (fmdlDict.TryGetValue(hash, out name))
+                return name;
+
+            return hash.ToString("x");
+        } //TryGetFmdlName
     } //Hashing
 } //namespace

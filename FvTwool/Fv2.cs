@@ -82,6 +82,149 @@ namespace FvTwool
         public VariableDataEntry[] variableDataEntries { get; set; }
         public ulong[] externalFileEntries { get; set; }
 
+        public void Read(string filePath)
+        {
+            using (FileStream stream = new FileStream(filePath, FileMode.Open))
+            {
+                try
+                {
+                    BinaryReader reader = new BinaryReader(stream);
+
+                    signature = reader.ReadUInt64();
+                    variableDataSectionOffset = reader.ReadUInt16();
+                    externalFileSectionOffset = reader.ReadUInt16();
+                    variableDataSectionCount = reader.ReadUInt16();
+                    externalFileSectionCount = reader.ReadUInt16();
+                    dataSectionsLength = reader.ReadUInt32();
+                    reader.BaseStream.Position += 4;
+                    textureCount = reader.ReadUInt16();
+                    reader.BaseStream.Position += 6;
+                    hideMeshGroupCount = reader.ReadByte();
+                    showMeshGroupCount = reader.ReadByte();
+                    textureSwapCount = reader.ReadByte();
+                    unknown0 = reader.ReadByte();
+                    boneModelAttachmentCount = reader.ReadByte();
+                    cnpModelAttachmentCount = reader.ReadByte();
+                    reader.BaseStream.Position += 2;
+
+                    variableDataEntries = new VariableDataEntry[variableDataSectionCount];
+                    externalFileEntries = new ulong[externalFileSectionCount];
+                    hideMeshGroupEntries = new uint[hideMeshGroupCount];
+                    showMeshGroupEntries = new uint[showMeshGroupCount];
+                    textureSwapEntries = new TextureSwapEntry[textureSwapCount];
+                    boneModelAttachEntries = new BoneModelAttachEntry[boneModelAttachmentCount];
+                    cnpModelAttachEntries = new CnpModelAttachEntry[cnpModelAttachmentCount];
+
+                    for (int i = 0; i < hideMeshGroupCount; i++)
+                        hideMeshGroupEntries[i] = reader.ReadUInt32();
+
+                    for (int i = 0; i < showMeshGroupCount; i++)
+                        showMeshGroupEntries[i] = reader.ReadUInt32();
+
+                    for (int i = 0; i < textureSwapCount; i++)
+                        textureSwapEntries[i].materialInstanceStrCode32 = reader.ReadUInt32();
+                    for (int i = 0; i < textureSwapCount; i++)
+                        textureSwapEntries[i].textureTypeStrCode32 = reader.ReadUInt32();
+                    for (int i = 0; i < textureSwapCount; i++)
+                        textureSwapEntries[i].textureIndex = reader.ReadInt16();
+                    for (int i = 0; i < textureSwapCount; i++)
+                        textureSwapEntries[i].unknown0 = reader.ReadInt16();
+
+                    for (int i = 0; i < boneModelAttachmentCount; i++)
+                    {
+                        boneModelAttachEntries[i].fmdlIndex = reader.ReadInt16();
+                        boneModelAttachEntries[i].frdvIndex = reader.ReadInt16();
+                        boneModelAttachEntries[i].unknownIndex0 = reader.ReadInt16();
+                        boneModelAttachEntries[i].unknownIndex1 = reader.ReadInt16();
+                        boneModelAttachEntries[i].simIndex = reader.ReadInt16();
+                        boneModelAttachEntries[i].unknownIndex2 = reader.ReadInt16();
+                    } //for
+
+                    for (int i = 0; i < cnpModelAttachmentCount; i++)
+                    {
+                        cnpModelAttachEntries[i].cnpStrCode32 = reader.ReadUInt32();
+                        cnpModelAttachEntries[i].emptyStrCode32 = reader.ReadUInt32();
+                        cnpModelAttachEntries[i].fmdlIndex = reader.ReadInt16();
+                        cnpModelAttachEntries[i].frdvIndex = reader.ReadInt16();
+                        cnpModelAttachEntries[i].unknownIndex0 = reader.ReadInt16();
+                        cnpModelAttachEntries[i].unknownIndex1 = reader.ReadInt16();
+                        cnpModelAttachEntries[i].simIndex = reader.ReadInt16();
+                        cnpModelAttachEntries[i].unknownIndex2 = reader.ReadInt16();
+                    } //for
+
+                    for(int i = 0; i < variableDataSectionCount; i++)
+                    {
+                        reader.BaseStream.Position = variableDataSectionOffset + 0x10 * i;
+
+                        variableDataEntries[i].typeEnum = reader.ReadByte();
+                        variableDataEntries[i].unknown0 = reader.ReadByte();
+                        variableDataEntries[i].subEntryCount = reader.ReadByte();
+                        variableDataEntries[i].meshGroupCount = reader.ReadByte();
+                        variableDataEntries[i].textureSwapCount = reader.ReadByte();
+                        variableDataEntries[i].unknown1 = reader.ReadByte();
+                        variableDataEntries[i].boneModelAttachmentCount = reader.ReadByte();
+                        variableDataEntries[i].cnpModelAttachmentCount = reader.ReadByte();
+                        reader.BaseStream.Position += 4;
+                        variableDataEntries[i].offset = reader.ReadUInt32();
+
+                        variableDataEntries[i].variableDataSubEntries = new VariableDataSubEntry[variableDataEntries[i].subEntryCount];
+                        reader.BaseStream.Position = variableDataEntries[i].offset;
+
+                        for(int j = 0; j < variableDataEntries[i].subEntryCount; j++)
+                        {
+                            variableDataEntries[i].variableDataSubEntries[j].meshGroupEntries = new uint[variableDataEntries[i].meshGroupCount];
+                            variableDataEntries[i].variableDataSubEntries[j].textureSwapEntries = new TextureSwapEntry[variableDataEntries[i].textureSwapCount];
+                            variableDataEntries[i].variableDataSubEntries[j].boneModelAttachEntries = new BoneModelAttachEntry[variableDataEntries[i].boneModelAttachmentCount];
+                            variableDataEntries[i].variableDataSubEntries[j].cnpModelAttachEntries = new CnpModelAttachEntry[variableDataEntries[i].cnpModelAttachmentCount];
+
+                            for (int k = 0; k < variableDataEntries[i].meshGroupCount; k++)
+                                variableDataEntries[i].variableDataSubEntries[j].meshGroupEntries[k] = reader.ReadUInt32();
+
+                            for (int k = 0; k < variableDataEntries[i].textureSwapCount; k++)
+                                variableDataEntries[i].variableDataSubEntries[j].textureSwapEntries[k].materialInstanceStrCode32 = reader.ReadUInt32();
+                            for (int k = 0; k < variableDataEntries[i].textureSwapCount; k++)
+                                variableDataEntries[i].variableDataSubEntries[j].textureSwapEntries[k].textureTypeStrCode32 = reader.ReadUInt32();
+                            for (int k = 0; k < variableDataEntries[i].textureSwapCount; k++)
+                                variableDataEntries[i].variableDataSubEntries[j].textureSwapEntries[k].textureIndex = reader.ReadInt16();
+                            for (int k = 0; k < variableDataEntries[i].textureSwapCount; k++)
+                                variableDataEntries[i].variableDataSubEntries[j].textureSwapEntries[k].unknown0 = reader.ReadInt16();
+
+                            for (int k = 0; k < variableDataEntries[i].boneModelAttachmentCount; k++)
+                            {
+                                variableDataEntries[i].variableDataSubEntries[j].boneModelAttachEntries[k].fmdlIndex = reader.ReadInt16();
+                                variableDataEntries[i].variableDataSubEntries[j].boneModelAttachEntries[k].frdvIndex = reader.ReadInt16();
+                                variableDataEntries[i].variableDataSubEntries[j].boneModelAttachEntries[k].unknownIndex0 = reader.ReadInt16();
+                                variableDataEntries[i].variableDataSubEntries[j].boneModelAttachEntries[k].unknownIndex1 = reader.ReadInt16();
+                                variableDataEntries[i].variableDataSubEntries[j].boneModelAttachEntries[k].simIndex = reader.ReadInt16();
+                                variableDataEntries[i].variableDataSubEntries[j].boneModelAttachEntries[k].unknownIndex2 = reader.ReadInt16();
+                            } //for
+
+                            for (int k = 0; k < variableDataEntries[i].cnpModelAttachmentCount; k++)
+                            {
+                                variableDataEntries[i].variableDataSubEntries[j].cnpModelAttachEntries[k].cnpStrCode32 = reader.ReadUInt32();
+                                variableDataEntries[i].variableDataSubEntries[j].cnpModelAttachEntries[k].emptyStrCode32 = reader.ReadUInt32();
+                                variableDataEntries[i].variableDataSubEntries[j].cnpModelAttachEntries[k].fmdlIndex = reader.ReadInt16();
+                                variableDataEntries[i].variableDataSubEntries[j].cnpModelAttachEntries[k].frdvIndex = reader.ReadInt16();
+                                variableDataEntries[i].variableDataSubEntries[j].cnpModelAttachEntries[k].unknownIndex0 = reader.ReadInt16();
+                                variableDataEntries[i].variableDataSubEntries[j].cnpModelAttachEntries[k].unknownIndex1 = reader.ReadInt16();
+                                variableDataEntries[i].variableDataSubEntries[j].cnpModelAttachEntries[k].simIndex = reader.ReadInt16();
+                                variableDataEntries[i].variableDataSubEntries[j].cnpModelAttachEntries[k].unknownIndex2 = reader.ReadInt16();
+                            } //for
+                        } //for
+                    } //for
+
+                    reader.BaseStream.Position = externalFileSectionOffset;
+
+                    for (int i = 0; i < externalFileSectionCount; i++)
+                        externalFileEntries[i] = reader.ReadUInt64();
+                } //try
+                catch
+                {
+                    stream.Close();
+                } //catch
+            } //using
+        } //Read
+
         public void Write(string filePath)
         {
             signature = 0x016E697732564F46;

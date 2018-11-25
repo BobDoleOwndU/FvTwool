@@ -28,11 +28,13 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.mainPanel = new System.Windows.Forms.Panel();
             this.targetLabel = new System.Windows.Forms.Label();
             this.targetComboBox = new System.Windows.Forms.ComboBox();
             this.exportButton = new System.Windows.Forms.Button();
+            this.importButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // groupBox1
@@ -85,17 +87,29 @@
             this.exportButton.UseVisualStyleBackColor = true;
             this.exportButton.Click += new System.EventHandler(this.ExportButton_Click);
             // 
+            // importButton
+            // 
+            this.importButton.Location = new System.Drawing.Point(93, 513);
+            this.importButton.Name = "importButton";
+            this.importButton.Size = new System.Drawing.Size(75, 23);
+            this.importButton.TabIndex = 5;
+            this.importButton.Text = "Import";
+            this.importButton.UseVisualStyleBackColor = true;
+            this.importButton.Click += new System.EventHandler(this.ImportButton_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(884, 548);
+            this.Controls.Add(this.importButton);
             this.Controls.Add(this.exportButton);
             this.Controls.Add(this.targetComboBox);
             this.Controls.Add(this.targetLabel);
             this.Controls.Add(this.mainPanel);
             this.Controls.Add(this.groupBox1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.Name = "MainForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
@@ -112,5 +126,6 @@
         private System.Windows.Forms.Label targetLabel;
         private System.Windows.Forms.ComboBox targetComboBox;
         private System.Windows.Forms.Button exportButton;
+        private System.Windows.Forms.Button importButton;
     }
 }
