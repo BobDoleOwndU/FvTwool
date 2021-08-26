@@ -162,6 +162,10 @@ namespace FvTwool
                 ReadQARDictionary("qar_dictionary.txt");
             if (File.Exists("fmdl_dictionary.txt"))
                 ReadFmdlDictionary("fmdl_dictionary.txt");
+            if (File.Exists("cust_qar_dictionary.txt"))
+                ReadQARDictionary("cust_qar_dictionary.txt");
+            if (File.Exists("cust_fmdl_dictionary.txt"))
+                ReadFmdlDictionary("cust_fmdl_dictionary.txt");
         } //constructor
 
         public static ulong HashFileExtension(string fileExtension) //from private to public

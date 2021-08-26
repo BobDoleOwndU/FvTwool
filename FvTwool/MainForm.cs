@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+using System.IO;
 using System.Windows.Forms;
 
 namespace FvTwool
@@ -17,10 +18,28 @@ namespace FvTwool
         const int LABEL_WIDTH = 126;
         Fv2String fv2String = new Fv2String();
 
-        public MainForm()
+        public MainForm(string[] args)
         {
             InitializeComponent();
+
+            if(args.Length > 0)
+            {
+                Read(args[0]);
+            }
         } //MainForm
+
+        public void Read(string path)
+        {
+            if (Path.GetExtension(path) == ".fv2")
+            {
+                Fv2 fv2 = new Fv2();
+                fv2.Read(path);
+                fv2String.GetDataFromFv2(fv2);
+
+                targetComboBox.SelectedIndex = 0;
+                ShowStaticDataControls();
+            }
+        }
 
         private ComboBox GetExternalFileComboBox()
         {
@@ -958,13 +977,19 @@ namespace FvTwool
 
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
-                Fv2 fv2 = new Fv2();
-                fv2.Read(openFileDialog.FileName);
-                fv2String.GetDataFromFv2(fv2);
-
-                targetComboBox.SelectedIndex = 0;
-                ShowStaticDataControls();
+                Read(openFileDialog.FileName);
             } //if
         } //ImportButton_Click
+
+        private void MainForm_DragDrop(object sender, DragEventArgs e)
+        {
+            string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
+            Read(files[0]);
+        }
+
+        private void MainForm_DragEnter(object sender, DragEventArgs e)
+        {
+            e.Effect = DragDropEffects.Copy;
+        }
     } //class
 } //namespace
