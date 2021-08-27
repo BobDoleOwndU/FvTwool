@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 
 namespace FvTwool
 {
@@ -158,14 +159,16 @@ namespace FvTwool
 
         static Hashing()
         {
-            if (File.Exists("qar_dictionary.txt"))
-                ReadQARDictionary("qar_dictionary.txt");
-            if (File.Exists("fmdl_dictionary.txt"))
-                ReadFmdlDictionary("fmdl_dictionary.txt");
-            if (File.Exists("cust_qar_dictionary.txt"))
-                ReadQARDictionary("cust_qar_dictionary.txt");
-            if (File.Exists("cust_fmdl_dictionary.txt"))
-                ReadFmdlDictionary("cust_fmdl_dictionary.txt");
+            string path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+
+            if (File.Exists($"{path}\\qar_dictionary.txt"))
+                ReadQARDictionary($"{path}\\qar_dictionary.txt");
+            if (File.Exists($"{path}\\fmdl_dictionary.txt"))
+                ReadFmdlDictionary($"{path}\\fmdl_dictionary.txt");
+            if (File.Exists($"{path}\\cust_qar_dictionary.txt"))
+                ReadQARDictionary($"{path}\\cust_qar_dictionary.txt");
+            if (File.Exists($"{path}\\cust_fmdl_dictionary.txt"))
+                ReadFmdlDictionary($"{path}\\cust_fmdl_dictionary.txt");
         } //constructor
 
         public static ulong HashFileExtension(string fileExtension) //from private to public
