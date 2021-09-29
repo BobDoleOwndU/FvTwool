@@ -161,14 +161,14 @@ namespace FvTwool
         {
             string path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 
-            if (File.Exists($"{path}\\qar_dictionary.txt"))
-                ReadQARDictionary($"{path}\\qar_dictionary.txt");
-            if (File.Exists($"{path}\\fmdl_dictionary.txt"))
-                ReadFmdlDictionary($"{path}\\fmdl_dictionary.txt");
-            if (File.Exists($"{path}\\cust_qar_dictionary.txt"))
-                ReadQARDictionary($"{path}\\cust_qar_dictionary.txt");
-            if (File.Exists($"{path}\\cust_fmdl_dictionary.txt"))
-                ReadFmdlDictionary($"{path}\\cust_fmdl_dictionary.txt");
+            if (File.Exists($"{path}\\fv2_path_dictionary.txt"))
+                ReadQARDictionary($"{path}\\fv2_path_dictionary.txt");
+            if (File.Exists($"{path}\\fv2_str_dictionary.txt"))
+                ReadFmdlDictionary($"{path}\\fv2_str_dictionary.txt");
+            if (File.Exists($"{path}\\cust_path_dictionary.txt"))
+                ReadQARDictionary($"{path}\\cust_path_dictionary.txt");
+            if (File.Exists($"{path}\\cust_str_dictionary.txt"))
+                ReadFmdlDictionary($"{path}\\cust_str_dictionary.txt");
         } //constructor
 
         public static ulong HashFileExtension(string fileExtension) //from private to public
