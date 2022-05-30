@@ -9,6 +9,7 @@ namespace FvTwool
             public string materialInstanceName;
             public string textureTypeName;
             public int textureIndex;
+            public int materialVectorIndex;
         } //struct
 
         public struct BoneModelAttachEntry
@@ -57,6 +58,7 @@ namespace FvTwool
         public BoneModelAttachEntry[] boneModelAttachEntries = new BoneModelAttachEntry[0];
         public CnpModelAttachEntry[] cnpModelAttachEntries = new CnpModelAttachEntry[0];
         public VariableDataEntry[] variableDataEntries = new VariableDataEntry[0];
+        public Vector4[] materialVectorEntries = new Vector4[0];
         public string[] externalFiles = new string[0];
 
         public void GetDataFromFv2(Fv2 fv2)
@@ -67,6 +69,7 @@ namespace FvTwool
             boneModelAttachEntries = new BoneModelAttachEntry[fv2.boneModelAttachmentCount];
             cnpModelAttachEntries = new CnpModelAttachEntry[fv2.cnpModelAttachmentCount];
             variableDataEntries = new VariableDataEntry[fv2.variableDataSectionCount];
+            materialVectorEntries = new Vector4[fv2.materialVectorSectionCount];
             externalFiles = new string[fv2.externalFileSectionCount];
 
             for (int i = 0; i < fv2.hideMeshGroupCount; i++)
@@ -80,6 +83,7 @@ namespace FvTwool
                 textureSwapEntries[i].materialInstanceName = Hashing.TryGetFmdlName(fv2.textureSwapEntries[i].materialInstanceStrCode32);
                 textureSwapEntries[i].textureTypeName = Hashing.TryGetFmdlName(fv2.textureSwapEntries[i].textureTypeStrCode32);
                 textureSwapEntries[i].textureIndex = fv2.textureSwapEntries[i].textureIndex;
+                textureSwapEntries[i].materialVectorIndex = fv2.textureSwapEntries[i].materialVectorIndex;
             } //for
 
             for (int i = 0; i < fv2.boneModelAttachmentCount; i++)
@@ -142,6 +146,11 @@ namespace FvTwool
                         variableDataEntries[i].variableDataSubEntries[j].cnpModelAttachEntries[k].simIndex = fv2.variableDataEntries[i].variableDataSubEntries[j].cnpModelAttachEntries[k].simIndex;
                     } //for
                 } //for
+            } //for
+
+            for(int i = 0; i < fv2.materialVectorSectionCount; i++)
+            {
+                materialVectorEntries[i] = fv2.materialVectorEntries[i];
             } //for
 
             for (int i = 0; i < fv2.externalFileSectionCount; i++)
