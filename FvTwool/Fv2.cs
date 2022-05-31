@@ -65,7 +65,7 @@ namespace FvTwool
         public ushort externalFileSectionOffset { get; set; }
         public ushort variableDataSectionCount { get; set; }
         public ushort externalFileSectionCount { get; set; }
-        public uint materialVectorSectionOffset { get; set; }
+        public uint materialParameterSectionOffset { get; set; }
         public uint materialParameterSectionCount { get; set; }
         public ushort textureCount { get; set; }
         public byte hideMeshGroupCount { get; set; }
@@ -97,7 +97,7 @@ namespace FvTwool
                     externalFileSectionOffset = reader.ReadUInt16();
                     variableDataSectionCount = reader.ReadUInt16();
                     externalFileSectionCount = reader.ReadUInt16();
-                    materialVectorSectionOffset = reader.ReadUInt32();
+                    materialParameterSectionOffset = reader.ReadUInt32();
                     materialParameterSectionCount = reader.ReadUInt32();
                     textureCount = reader.ReadUInt16();
                     reader.BaseStream.Position += 6;
@@ -216,7 +216,7 @@ namespace FvTwool
                         } //for
                     } //for
 
-                    reader.BaseStream.Position = materialVectorSectionOffset;
+                    reader.BaseStream.Position = materialParameterSectionOffset;
 
                     for (int i = 0; i < materialParameterSectionCount; i++)
                     {
@@ -384,7 +384,7 @@ namespace FvTwool
                     if (writer.BaseStream.Position % 0x10 != 0)
                         writer.WriteZeroes(0x10 - (int)writer.BaseStream.Position % 0x10);
 
-                    materialVectorSectionOffset = (ushort)writer.BaseStream.Position;
+                    materialParameterSectionOffset = (ushort)writer.BaseStream.Position;
 
                     for (int i = 0; i < materialParameterSectionCount; i++)
                         for (int j = 0; j < 4; j++)
@@ -401,7 +401,7 @@ namespace FvTwool
                     writer.Write(externalFileSectionOffset);
 
                     writer.BaseStream.Position = 0x10;
-                    writer.Write(materialVectorSectionOffset);
+                    writer.Write(materialParameterSectionOffset);
 
                     for (int i = 0; i < variableDataSectionCount; i++)
                     {
@@ -537,7 +537,7 @@ namespace FvTwool
                             variableDataEntries[i].variableDataSubEntries[j].meshGroupEntries[k] = (uint)Hashing.HashFileNameLegacy(fv2String.variableDataEntries[i].variableDataSubEntries[j].meshGroupEntries[k]);
                         } //catch
 
-                    for(int k = 0; k < variableDataEntries[i].textureSwapCount; k++)
+                    for (int k = 0; k < variableDataEntries[i].textureSwapCount; k++)
                     {
                         try
                         {
@@ -556,9 +556,9 @@ namespace FvTwool
                         {
                             variableDataEntries[i].variableDataSubEntries[j].textureSwapEntries[k].textureTypeStrCode32 = (uint)Hashing.HashFileNameLegacy(fv2String.variableDataEntries[i].variableDataSubEntries[j].textureSwapEntries[k].textureTypeName);
                         } //catch
-                        
+
                         variableDataEntries[i].variableDataSubEntries[j].textureSwapEntries[k].textureIndex = (short)fv2String.variableDataEntries[i].variableDataSubEntries[j].textureSwapEntries[k].textureIndex;
-                        variableDataEntries[i].variableDataSubEntries[j].textureSwapEntries[k].materialParameterIndex = -1;
+                        variableDataEntries[i].variableDataSubEntries[j].textureSwapEntries[k].materialParameterIndex = (short)fv2String.variableDataEntries[i].variableDataSubEntries[j].textureSwapEntries[k].materialParameterIndex;
                     } //for
 
                     for (int k = 0; k < variableDataEntries[i].boneModelAttachmentCount; k++)

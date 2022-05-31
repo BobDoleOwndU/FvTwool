@@ -51,7 +51,7 @@ namespace FvTwool
             return comboBox;
         } //GetExternalFileComboBox
 
-        private ComboBox GetMaterialVectorComboBox()
+        private ComboBox GetMaterialParameterComboBox()
         {
             ComboBox comboBox = new ComboBox();
             comboBox.Items.Add("None");
@@ -59,7 +59,7 @@ namespace FvTwool
             comboBox.DropDownStyle = ComboBoxStyle.DropDownList;
             comboBox.DropDownWidth = 300;
             return comboBox;
-        } //GetMaterialVectorComboBox
+        } //GetMaterialParameterComboBox
 
         private void ResizeArray<T>(object sender, EventArgs e, ref T[] array) where T : new()
         {
@@ -321,7 +321,7 @@ namespace FvTwool
 
             int heightOffset = 16;
 
-            if (fv2String.externalFiles.Length > 0)
+            if (fv2String.materialParameterEntries.Length > 0)
             {
                 Label label = new Label();
                 label.Location = new System.Drawing.Point(6, heightOffset + LABEL_SPACING);
@@ -493,7 +493,7 @@ namespace FvTwool
 
                     Label textureTypeLabel = new Label();
                     textureTypeLabel.Location = new System.Drawing.Point(6, 16 + CONTROL_SPACING + LABEL_SPACING);
-                    textureTypeLabel.Text = "Texture Type";
+                    textureTypeLabel.Text = "Parameter Name";
                     textureTypeLabel.Width = LABEL_WIDTH;
                     textureSwapGroupBox.Controls.Add(textureTypeLabel);
 
@@ -503,33 +503,14 @@ namespace FvTwool
                     textureTypeTextBox.TextChanged += new EventHandler((object sender, EventArgs e) => UpdateString(sender, e, ref fv2String.textureSwapEntries[index].textureTypeName));
                     textureSwapGroupBox.Controls.Add(textureTypeTextBox);
 
-                    Label materialVectorLabel = new Label();
-                    materialVectorLabel.Location = new System.Drawing.Point(6, 16 + CONTROL_SPACING * 2 + LABEL_SPACING);
-                    materialVectorLabel.Text = "Material Vector";
-                    materialVectorLabel.Width = LABEL_WIDTH;
-                    textureSwapGroupBox.Controls.Add(materialVectorLabel);
-
-                    ComboBox materialVectorComboBox = GetMaterialVectorComboBox();
-                    materialVectorComboBox.Location = new System.Drawing.Point(materialVectorLabel.Right + 10, 16 + CONTROL_SPACING * 2);
-                    try
-                    {
-                        materialVectorComboBox.SelectedIndex = fv2String.textureSwapEntries[i].materialParameterIndex + 1;
-                    } //try
-                    catch
-                    {
-                        materialVectorComboBox.SelectedIndex = 0;
-                    } //catch
-                    materialVectorComboBox.SelectedIndexChanged += new EventHandler((object sender, EventArgs e) => UpdateIndex(sender, e, ref fv2String.textureSwapEntries[index].materialParameterIndex));
-                    textureSwapGroupBox.Controls.Add(materialVectorComboBox);
-
                     Label textureLabel = new Label();
-                    textureLabel.Location = new System.Drawing.Point(6, 16 + CONTROL_SPACING * 3 + LABEL_SPACING);
+                    textureLabel.Location = new System.Drawing.Point(6, 16 + CONTROL_SPACING * 2 + LABEL_SPACING);
                     textureLabel.Text = "Texture";
                     textureLabel.Width = LABEL_WIDTH;
                     textureSwapGroupBox.Controls.Add(textureLabel);
 
                     ComboBox textureComboBox = GetExternalFileComboBox();
-                    textureComboBox.Location = new System.Drawing.Point(textureLabel.Right + 10, 16 + CONTROL_SPACING * 3);
+                    textureComboBox.Location = new System.Drawing.Point(textureLabel.Right + 10, 16 + CONTROL_SPACING * 2);
                     try
                     {
                         textureComboBox.SelectedIndex = fv2String.textureSwapEntries[i].textureIndex + 1;
@@ -540,6 +521,25 @@ namespace FvTwool
                     } //catch
                     textureComboBox.SelectedIndexChanged += new EventHandler((object sender, EventArgs e) => UpdateIndex(sender, e, ref fv2String.textureSwapEntries[index].textureIndex));
                     textureSwapGroupBox.Controls.Add(textureComboBox);
+
+                    Label materialParameterLabel = new Label();
+                    materialParameterLabel.Location = new System.Drawing.Point(6, 16 + CONTROL_SPACING * 3 + LABEL_SPACING);
+                    materialParameterLabel.Text = "Material Parameter";
+                    materialParameterLabel.Width = LABEL_WIDTH;
+                    textureSwapGroupBox.Controls.Add(materialParameterLabel);
+
+                    ComboBox materiaParameterComboBox = GetMaterialParameterComboBox();
+                    materiaParameterComboBox.Location = new System.Drawing.Point(materialParameterLabel.Right + 10, 16 + CONTROL_SPACING * 3);
+                    try
+                    {
+                        materiaParameterComboBox.SelectedIndex = fv2String.textureSwapEntries[i].materialParameterIndex + 1;
+                    } //try
+                    catch
+                    {
+                        materiaParameterComboBox.SelectedIndex = 0;
+                    } //catch
+                    materiaParameterComboBox.SelectedIndexChanged += new EventHandler((object sender, EventArgs e) => UpdateIndex(sender, e, ref fv2String.textureSwapEntries[index].materialParameterIndex));
+                    textureSwapGroupBox.Controls.Add(materiaParameterComboBox);
 
                     heightOffset += textureSwapGroupBox.Height + 3;
                 } //for
@@ -788,7 +788,7 @@ namespace FvTwool
 
                         Label textureTypeLabel = new Label();
                         textureTypeLabel.Location = new System.Drawing.Point(6, 16 + CONTROL_SPACING + LABEL_SPACING);
-                        textureTypeLabel.Text = "Texture Type";
+                        textureTypeLabel.Text = "Parameter Name";
                         textureTypeLabel.Width = LABEL_WIDTH;
                         textureSwapGroupBox.Controls.Add(textureTypeLabel);
 
@@ -816,6 +816,25 @@ namespace FvTwool
                         } //catch
                         textureComboBox.SelectedIndexChanged += new EventHandler((object sender, EventArgs e) => UpdateIndex(sender, e, ref variableDataEntry.variableDataSubEntries[index0].textureSwapEntries[index1].textureIndex));
                         textureSwapGroupBox.Controls.Add(textureComboBox);
+
+                        Label materialParameterLabel = new Label();
+                        materialParameterLabel.Location = new System.Drawing.Point(6, 16 + CONTROL_SPACING * 3 + LABEL_SPACING);
+                        materialParameterLabel.Text = "Material Parameter";
+                        materialParameterLabel.Width = LABEL_WIDTH;
+                        textureSwapGroupBox.Controls.Add(materialParameterLabel);
+
+                        ComboBox materialParameterComboBox = GetMaterialParameterComboBox();
+                        materialParameterComboBox.Location = new System.Drawing.Point(materialParameterLabel.Right + 10, 16 + CONTROL_SPACING * 3);
+                        try
+                        {
+                            materialParameterComboBox.SelectedIndex = variableDataEntry.variableDataSubEntries[j].textureSwapEntries[i].materialParameterIndex + 1;
+                        } //try
+                        catch
+                        {
+                            materialParameterComboBox.SelectedIndex = 0;
+                        } //catch
+                        materialParameterComboBox.SelectedIndexChanged += new EventHandler((object sender, EventArgs e) => UpdateIndex(sender, e, ref variableDataEntry.variableDataSubEntries[index0].textureSwapEntries[index1].materialParameterIndex));
+                        textureSwapGroupBox.Controls.Add(materialParameterComboBox);
 
                         heightOffset += textureSwapGroupBox.Height + 3;
                     } //for

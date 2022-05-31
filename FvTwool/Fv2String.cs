@@ -129,6 +129,7 @@ namespace FvTwool
                         variableDataEntries[i].variableDataSubEntries[j].textureSwapEntries[k].materialInstanceName = Hashing.TryGetFmdlName(fv2.variableDataEntries[i].variableDataSubEntries[j].textureSwapEntries[k].materialInstanceStrCode32);
                         variableDataEntries[i].variableDataSubEntries[j].textureSwapEntries[k].textureTypeName = Hashing.TryGetFmdlName(fv2.variableDataEntries[i].variableDataSubEntries[j].textureSwapEntries[k].textureTypeStrCode32);
                         variableDataEntries[i].variableDataSubEntries[j].textureSwapEntries[k].textureIndex = fv2.variableDataEntries[i].variableDataSubEntries[j].textureSwapEntries[k].textureIndex;
+                        variableDataEntries[i].variableDataSubEntries[j].textureSwapEntries[k].materialParameterIndex = fv2.variableDataEntries[i].variableDataSubEntries[j].textureSwapEntries[k].materialParameterIndex;
                     } //for
 
                     for (int k = 0; k < fv2.variableDataEntries[i].boneModelAttachmentCount; k++)
