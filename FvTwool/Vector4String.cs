@@ -1,19 +1,23 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace FvTwool
 {
-    public class Vector4
+    public class Vector4String
     {
-        public float x { get; set; }
-        public float y { get; set; }
-        public float z { get; set; }
-        public float w { get; set; }
+        public string x;
+        public string y;
+        public string z;
+        public string w;
 
-        public float this[int index]
+        public string this[int index]
         {
             get
             {
-                switch(index)
+                switch (index)
                 {
                     case 0:
                         return x;
@@ -27,6 +31,7 @@ namespace FvTwool
                         throw new ArgumentOutOfRangeException();
                 } //switch
             } //get
+
             set
             {
                 switch(index)
@@ -51,7 +56,7 @@ namespace FvTwool
 
         public override string ToString()
         {
-            return $"({x}, {y}, {z}, {w})";
+            return $"{x}, {y}, {z}, {w}";
         } //ToString
-    } //class
-} //namespace
+    } //Vector4String
+}

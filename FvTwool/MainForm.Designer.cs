@@ -70,6 +70,7 @@
             this.targetComboBox.Items.AddRange(new object[] {
             "Static Data",
             "Variable Data",
+            "Material Parameters",
             "External Files"});
             this.targetComboBox.Location = new System.Drawing.Point(50, 16);
             this.targetComboBox.Name = "targetComboBox";

@@ -55,13 +55,7 @@ namespace FvTwool
         {
             ComboBox comboBox = new ComboBox();
             comboBox.Items.Add("None");
-            //comboBox.Items.AddRange(fv2String.materialVectorEntries);
-
-            for(int i = 0; i < fv2String.materialVectorEntries.Length; i++)
-            {
-                comboBox.Items.Add(i);
-            } //for
-
+            comboBox.Items.AddRange(fv2String.materialParameterEntries);
             comboBox.DropDownStyle = ComboBoxStyle.DropDownList;
             comboBox.DropDownWidth = 300;
             return comboBox;
@@ -88,6 +82,7 @@ namespace FvTwool
         private void ResizeVariableDataEntryArray(object sender, EventArgs e, Fv2String.VariableDataEntry variableDataEntry, string type)
         {
             for (int i = 0; i < variableDataEntry.variableDataSubEntries.Length; i++)
+            {
                 switch (type)
                 {
                     case "meshgroups":
@@ -103,6 +98,7 @@ namespace FvTwool
                         ResizeArray(sender, e, ref variableDataEntry.variableDataSubEntries[i].cnpModelAttachEntries);
                         break;
                 } //switch
+            } //for
         } //UpdateVariableDataEntryArrays
 
         private void ShowExternalFileControls()
@@ -124,6 +120,26 @@ namespace FvTwool
 
             UpdateExternalFileControls();
         } //ShowTextureControls
+
+        private void ShowMaterialParameterControls()
+        {
+            groupBox1.Controls.Clear();
+
+            Label materialParameterLabel = new Label();
+            materialParameterLabel.Location = new System.Drawing.Point(6, 16 + LABEL_SPACING);
+            materialParameterLabel.Width = LABEL_WIDTH;
+            materialParameterLabel.Text = "Material Parameter Count";
+            groupBox1.Controls.Add(materialParameterLabel);
+
+            TextBox materialParameterTextbox = new TextBox();
+            materialParameterTextbox.Location = new System.Drawing.Point(materialParameterLabel.Right + 10, 16);
+            materialParameterTextbox.Text = fv2String.materialParameterEntries.Length.ToString();
+            materialParameterTextbox.TextChanged += new EventHandler((object sender, EventArgs e) => ResizeArray(sender, e, ref fv2String.materialParameterEntries));
+            materialParameterTextbox.TextChanged += new EventHandler((object sender, EventArgs e) => UpdateMaterialParameterControls());
+            groupBox1.Controls.Add(materialParameterTextbox);
+
+            UpdateMaterialParameterControls();
+        } //ShowMaterialParameterControls
 
         private void ShowStaticDataControls()
         {
@@ -252,6 +268,9 @@ namespace FvTwool
                     ShowVariableDataControls();
                     break;
                 case 2:
+                    ShowMaterialParameterControls();
+                    break;
+                case 3:
                     ShowExternalFileControls();
                     break;
                 default:
@@ -295,6 +314,82 @@ namespace FvTwool
                 } //for
             } //if
         } //UpdateExternalFileControls
+
+        private void UpdateMaterialParameterControls()
+        {
+            mainPanel.Controls.Clear();
+
+            int heightOffset = 16;
+
+            if (fv2String.externalFiles.Length > 0)
+            {
+                Label label = new Label();
+                label.Location = new System.Drawing.Point(6, heightOffset + LABEL_SPACING);
+                label.Width = LABEL_WIDTH;
+                label.Text = "Material Parameters";
+                mainPanel.Controls.Add(label);
+
+                for (int i = 0; i < fv2String.materialParameterEntries.Length; i++)
+                {
+                    int index = i;
+                    GroupBox materialParameterGroupBox = new GroupBox();
+                    materialParameterGroupBox.AutoSize = true;
+                    materialParameterGroupBox.Location = new System.Drawing.Point(label.Right + 10, heightOffset + LABEL_SPACING);
+                    materialParameterGroupBox.Text = $"Material Parameter {i}";
+                    mainPanel.Controls.Add(materialParameterGroupBox);
+
+                    Label xLabel = new Label();
+                    xLabel.Location = new System.Drawing.Point(6, 16 + LABEL_SPACING);
+                    xLabel.Text = "X";
+                    xLabel.Width = LABEL_WIDTH;
+                    materialParameterGroupBox.Controls.Add(xLabel);
+
+                    TextBox xTextBox = new TextBox();
+                    xTextBox.Location = new System.Drawing.Point(xLabel.Right + 10, 16);
+                    xTextBox.Text = fv2String.materialParameterEntries[i].x;
+                    xTextBox.TextChanged += new EventHandler((object sender, EventArgs e) => UpdateString(sender, e, ref fv2String.materialParameterEntries[index].x));
+                    materialParameterGroupBox.Controls.Add(xTextBox);
+
+                    Label yLabel = new Label();
+                    yLabel.Location = new System.Drawing.Point(6, 16 + CONTROL_SPACING + LABEL_SPACING);
+                    yLabel.Text = "Y";
+                    yLabel.Width = LABEL_WIDTH;
+                    materialParameterGroupBox.Controls.Add(yLabel);
+
+                    TextBox yTextBox = new TextBox();
+                    yTextBox.Location = new System.Drawing.Point(yLabel.Right + 10, 16 + CONTROL_SPACING);
+                    yTextBox.Text = fv2String.materialParameterEntries[i].y;
+                    yTextBox.TextChanged += new EventHandler((object sender, EventArgs e) => UpdateString(sender, e, ref fv2String.materialParameterEntries[index].y));
+                    materialParameterGroupBox.Controls.Add(yTextBox);
+
+                    Label zLabel = new Label();
+                    zLabel.Location = new System.Drawing.Point(6, 16 + CONTROL_SPACING * 2 + LABEL_SPACING);
+                    zLabel.Text = "Z";
+                    zLabel.Width = LABEL_WIDTH;
+                    materialParameterGroupBox.Controls.Add(zLabel);
+
+                    TextBox zTextBox = new TextBox();
+                    zTextBox.Location = new System.Drawing.Point(xLabel.Right + 10, 16 + CONTROL_SPACING * 2);
+                    zTextBox.Text = fv2String.materialParameterEntries[i].z;
+                    zTextBox.TextChanged += new EventHandler((object sender, EventArgs e) => UpdateString(sender, e, ref fv2String.materialParameterEntries[index].z));
+                    materialParameterGroupBox.Controls.Add(zTextBox);
+
+                    Label wLabel = new Label();
+                    wLabel.Location = new System.Drawing.Point(6, 16 + CONTROL_SPACING * 3 + LABEL_SPACING);
+                    wLabel.Text = "W";
+                    wLabel.Width = LABEL_WIDTH;
+                    materialParameterGroupBox.Controls.Add(wLabel);
+
+                    TextBox wTextBox = new TextBox();
+                    wTextBox.Location = new System.Drawing.Point(xLabel.Right + 10, 16 + CONTROL_SPACING * 3);
+                    wTextBox.Text = fv2String.materialParameterEntries[i].w;
+                    wTextBox.TextChanged += new EventHandler((object sender, EventArgs e) => UpdateString(sender, e, ref fv2String.materialParameterEntries[index].w));
+                    materialParameterGroupBox.Controls.Add(wTextBox);
+
+                    heightOffset += materialParameterGroupBox.Height + 3;
+                } //for
+            } //if
+        } //UpdateMaterialParameterControls
 
         private void UpdateIndex(object sender, EventArgs e, ref int i)
         {
@@ -418,13 +513,13 @@ namespace FvTwool
                     materialVectorComboBox.Location = new System.Drawing.Point(materialVectorLabel.Right + 10, 16 + CONTROL_SPACING * 2);
                     try
                     {
-                        materialVectorComboBox.SelectedIndex = fv2String.textureSwapEntries[i].materialVectorIndex + 1;
+                        materialVectorComboBox.SelectedIndex = fv2String.textureSwapEntries[i].materialParameterIndex + 1;
                     } //try
                     catch
                     {
                         materialVectorComboBox.SelectedIndex = 0;
                     } //catch
-                    materialVectorComboBox.SelectedIndexChanged += new EventHandler((object sender, EventArgs e) => UpdateIndex(sender, e, ref fv2String.textureSwapEntries[index].materialVectorIndex));
+                    materialVectorComboBox.SelectedIndexChanged += new EventHandler((object sender, EventArgs e) => UpdateIndex(sender, e, ref fv2String.textureSwapEntries[index].materialParameterIndex));
                     textureSwapGroupBox.Controls.Add(materialVectorComboBox);
 
                     Label textureLabel = new Label();
