@@ -68,6 +68,8 @@ namespace FvTwool
 
             if (Byte.TryParse(textBox.Text, out textValue))
                 Utils.ResizeArray(ref array, textValue);
+
+            fv2String.ValidateData();
         } //ResizeArray
 
         private void ResizeStringArray(object sender, EventArgs e, ref string[] array)
@@ -77,6 +79,8 @@ namespace FvTwool
 
             if (Byte.TryParse(textBox.Text, out textValue))
                 Utils.ResizeStringArray(ref array, textValue);
+
+            fv2String.ValidateData();
         } //ResizeArray
 
         private void ResizeVariableDataEntryArray(object sender, EventArgs e, Fv2String.VariableDataEntry variableDataEntry, string type)

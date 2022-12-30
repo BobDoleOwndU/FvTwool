@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace FvTwool
+﻿namespace FvTwool
 {
     public class Fv2String
     {
@@ -162,5 +160,99 @@ namespace FvTwool
                 externalFiles[i] = Hashing.TryGetQarName(fv2.externalFileEntries[i]);
             } //for
         } //GetDataFromFv2
+
+        public void ValidateData()
+        {
+            int externalFileCount = externalFiles.Length;
+            int materialParameterCount = materialParameterEntries.Length;
+
+            int textureSwapCount = textureSwapEntries.Length;
+
+            for(int i = 0; i < textureSwapCount; i++)
+            {
+                if (textureSwapEntries[i].textureIndex >= externalFileCount)
+                    textureSwapEntries[i].textureIndex = -1;
+
+                if (textureSwapEntries[i].materialParameterIndex >= materialParameterCount)
+                    textureSwapEntries[i].materialParameterIndex = -1;
+            } //for
+
+            int boneAttachCount = boneModelAttachEntries.Length;
+
+            for(int i = 0; i < boneAttachCount; i++)
+            {
+                if (boneModelAttachEntries[i].fmdlIndex >= externalFileCount)
+                    boneModelAttachEntries[i].fmdlIndex = -1;
+
+                if (boneModelAttachEntries[i].frdvIndex >= externalFileCount)
+                    boneModelAttachEntries[i].frdvIndex = -1;
+
+                if (boneModelAttachEntries[i].simIndex >= externalFileCount)
+                    boneModelAttachEntries[i].simIndex = -1;
+            } //for
+
+            int cnpAttachCount = cnpModelAttachEntries.Length;
+
+            for (int i = 0; i < cnpAttachCount; i++)
+            {
+                if (cnpModelAttachEntries[i].fmdlIndex >= externalFileCount)
+                    cnpModelAttachEntries[i].fmdlIndex = -1;
+
+                if (cnpModelAttachEntries[i].frdvIndex >= externalFileCount)
+                    cnpModelAttachEntries[i].frdvIndex = -1;
+
+                if (cnpModelAttachEntries[i].simIndex >= externalFileCount)
+                    cnpModelAttachEntries[i].simIndex = -1;
+            } //for
+
+            int variableDataCount = variableDataEntries.Length;
+
+            for(int i = 0; i < variableDataCount; i++)
+            {
+                int subEntryCount = variableDataEntries[i].variableDataSubEntries.Length;
+
+                for(int j = 0; j < subEntryCount; j++)
+                {
+                    int vTextureSwapCount = variableDataEntries[i].variableDataSubEntries[j].textureSwapEntries.Length;
+
+                    for(int k = 0; k < vTextureSwapCount; k++)
+                    {
+                        if (variableDataEntries[i].variableDataSubEntries[j].textureSwapEntries[k].textureIndex >= externalFileCount)
+                            variableDataEntries[i].variableDataSubEntries[j].textureSwapEntries[k].textureIndex = -1;
+
+                        if (variableDataEntries[i].variableDataSubEntries[j].textureSwapEntries[k].materialParameterIndex >= materialParameterCount)
+                            variableDataEntries[i].variableDataSubEntries[j].textureSwapEntries[k].materialParameterIndex = -1;
+                    } //for
+
+                    int vBoneAttachCount = variableDataEntries[i].variableDataSubEntries[j].boneModelAttachEntries.Length;
+
+                    for(int k = 0; k < vBoneAttachCount; k++)
+                    {
+                        if (variableDataEntries[i].variableDataSubEntries[j].boneModelAttachEntries[k].fmdlIndex >= externalFileCount)
+                            variableDataEntries[i].variableDataSubEntries[j].boneModelAttachEntries[k].fmdlIndex = -1;
+
+                        if (variableDataEntries[i].variableDataSubEntries[j].boneModelAttachEntries[k].frdvIndex >= externalFileCount)
+                            variableDataEntries[i].variableDataSubEntries[j].boneModelAttachEntries[k].frdvIndex = -1;
+
+                        if (variableDataEntries[i].variableDataSubEntries[j].boneModelAttachEntries[k].simIndex >= externalFileCount)
+                            variableDataEntries[i].variableDataSubEntries[j].boneModelAttachEntries[k].simIndex = -1;
+                    } //for
+
+                    int vCnpAttachCount = variableDataEntries[i].variableDataSubEntries[j].cnpModelAttachEntries.Length;
+
+                    for(int k = 0; k < vCnpAttachCount; k++)
+                    {
+                        if (variableDataEntries[i].variableDataSubEntries[j].cnpModelAttachEntries[k].fmdlIndex >= externalFileCount)
+                            variableDataEntries[i].variableDataSubEntries[j].cnpModelAttachEntries[k].fmdlIndex = -1;
+
+                        if (variableDataEntries[i].variableDataSubEntries[j].cnpModelAttachEntries[k].frdvIndex >= externalFileCount)
+                            variableDataEntries[i].variableDataSubEntries[j].cnpModelAttachEntries[k].frdvIndex = -1;
+
+                        if (variableDataEntries[i].variableDataSubEntries[j].cnpModelAttachEntries[k].simIndex >= externalFileCount)
+                            variableDataEntries[i].variableDataSubEntries[j].cnpModelAttachEntries[k].simIndex = -1;
+                    } //for
+                } //for
+            } //for
+        } //ValidateData
     } //class
 } //namespace
