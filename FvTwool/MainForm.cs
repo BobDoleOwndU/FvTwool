@@ -38,8 +38,8 @@ namespace FvTwool
 
                 targetComboBox.SelectedIndex = 0;
                 ShowStaticDataControls();
-            }
-        }
+            } //if
+        } //Read
 
         private ComboBox GetExternalFileComboBox()
         {
@@ -61,8 +61,10 @@ namespace FvTwool
             return comboBox;
         } //GetMaterialParameterComboBox
 
-        private void ResizeArray<T>(object sender, EventArgs e, ref T[] array) where T : new()
+        private void ResizeArray<T>(object sender, EventArgs e, ref T[] array, out bool isSizeChanged) where T : new()
         {
+            isSizeChanged = false;
+
             if (e is KeyEventArgs)
             {
                 KeyEventArgs ke = e as KeyEventArgs;
@@ -77,13 +79,21 @@ namespace FvTwool
             TextBox textBox = (TextBox)sender;
 
             if (Byte.TryParse(textBox.Text, out textValue))
-                Utils.ResizeArray(ref array, textValue);
+            {
+                if (textValue != array.Length)
+                {
+                    Utils.ResizeArray(ref array, textValue);
+                    isSizeChanged = true;
+                } //if
+            } //if
 
             fv2String.ValidateData();
         } //ResizeArray
 
-        private void ResizeStringArray(object sender, EventArgs e, ref string[] array)
+        private void ResizeStringArray(object sender, EventArgs e, ref string[] array, out bool isSizeChanged)
         {
+            isSizeChanged = false;
+
             if(e is KeyEventArgs)
             {
                 KeyEventArgs ke = e as KeyEventArgs;
@@ -98,13 +108,21 @@ namespace FvTwool
             TextBox textBox = (TextBox)sender;
 
             if (Byte.TryParse(textBox.Text, out textValue))
-                Utils.ResizeStringArray(ref array, textValue);
+            {
+                if (textValue != array.Length)
+                {
+                    isSizeChanged = true;
+                    Utils.ResizeStringArray(ref array, textValue);
+                } //if
+            } //if
 
             fv2String.ValidateData();
         } //ResizeArray
 
         private void ResizeVariableDataEntryArray(object sender, EventArgs e, Fv2String.VariableDataEntry variableDataEntry, string type)
         {
+            bool isSizeChanged;
+
             if (e is KeyEventArgs)
             {
                 KeyEventArgs ke = e as KeyEventArgs;
@@ -120,16 +138,16 @@ namespace FvTwool
                 switch (type)
                 {
                     case "meshgroups":
-                        ResizeStringArray(sender, e, ref variableDataEntry.variableDataSubEntries[i].meshGroupEntries);
+                        ResizeStringArray(sender, e, ref variableDataEntry.variableDataSubEntries[i].meshGroupEntries, out isSizeChanged);
                         break;
                     case "textureswaps":
-                        ResizeArray(sender, e, ref variableDataEntry.variableDataSubEntries[i].textureSwapEntries);
+                        ResizeArray(sender, e, ref variableDataEntry.variableDataSubEntries[i].textureSwapEntries, out isSizeChanged);
                         break;
                     case "boneattachments":
-                        ResizeArray(sender, e, ref variableDataEntry.variableDataSubEntries[i].boneModelAttachEntries);
+                        ResizeArray(sender, e, ref variableDataEntry.variableDataSubEntries[i].boneModelAttachEntries, out isSizeChanged);
                         break;
                     case "cnpattachments":
-                        ResizeArray(sender, e, ref variableDataEntry.variableDataSubEntries[i].cnpModelAttachEntries);
+                        ResizeArray(sender, e, ref variableDataEntry.variableDataSubEntries[i].cnpModelAttachEntries, out isSizeChanged);
                         break;
                 } //switch
             } //for
@@ -137,6 +155,8 @@ namespace FvTwool
 
         private void ShowExternalFileControls()
         {
+            bool isSizeChanged = false;
+
             groupBox1.Controls.Clear();
 
             Label filesLabel = new Label();
@@ -148,17 +168,19 @@ namespace FvTwool
             TextBox externalFilesTextBox = new TextBox();
             externalFilesTextBox.Location = new System.Drawing.Point(filesLabel.Right + 10, 16);
             externalFilesTextBox.Text = fv2String.externalFiles.Length.ToString();
-            externalFilesTextBox.Leave += new EventHandler((object sender, EventArgs e) => ResizeStringArray(sender, e, ref fv2String.externalFiles));
-            externalFilesTextBox.Leave += new EventHandler((object sender, EventArgs e) => UpdateExternalFileControls());
-            externalFilesTextBox.KeyDown += new KeyEventHandler((object sender, KeyEventArgs e) => ResizeStringArray(sender, e, ref fv2String.externalFiles));
-            externalFilesTextBox.KeyDown += new KeyEventHandler((object sender, KeyEventArgs e) => UpdateExternalFileControls(e));
+            externalFilesTextBox.LostFocus += new EventHandler((object sender, EventArgs e) => ResizeStringArray(sender, e, ref fv2String.externalFiles, out isSizeChanged));
+            externalFilesTextBox.LostFocus += new EventHandler((object sender, EventArgs e) => UpdateExternalFileControls(isSizeChanged));
+            externalFilesTextBox.KeyDown += new KeyEventHandler((object sender, KeyEventArgs e) => ResizeStringArray(sender, e, ref fv2String.externalFiles, out isSizeChanged));
+            externalFilesTextBox.KeyDown += new KeyEventHandler((object sender, KeyEventArgs e) => UpdateExternalFileControls(isSizeChanged, e));
             groupBox1.Controls.Add(externalFilesTextBox);
 
-            UpdateExternalFileControls();
+            UpdateExternalFileControls(true);
         } //ShowTextureControls
 
         private void ShowMaterialParameterControls()
         {
+            bool isSizeChanged = false;
+
             groupBox1.Controls.Clear();
 
             Label materialParameterLabel = new Label();
@@ -170,17 +192,19 @@ namespace FvTwool
             TextBox materialParameterTextbox = new TextBox();
             materialParameterTextbox.Location = new System.Drawing.Point(materialParameterLabel.Right + 10, 16);
             materialParameterTextbox.Text = fv2String.materialParameterEntries.Length.ToString();
-            materialParameterTextbox.Leave += new EventHandler((object sender, EventArgs e) => ResizeArray(sender, e, ref fv2String.materialParameterEntries));
-            materialParameterTextbox.Leave += new EventHandler((object sender, EventArgs e) => UpdateMaterialParameterControls());
-            materialParameterTextbox.KeyDown += new KeyEventHandler((object sender, KeyEventArgs e) => ResizeArray(sender, e, ref fv2String.materialParameterEntries));
-            materialParameterTextbox.KeyDown += new KeyEventHandler((object sender, KeyEventArgs e) => UpdateMaterialParameterControls(e));
+            materialParameterTextbox.LostFocus += new EventHandler((object sender, EventArgs e) => ResizeArray(sender, e, ref fv2String.materialParameterEntries, out isSizeChanged));
+            materialParameterTextbox.LostFocus += new EventHandler((object sender, EventArgs e) => UpdateMaterialParameterControls(isSizeChanged));
+            materialParameterTextbox.KeyDown += new KeyEventHandler((object sender, KeyEventArgs e) => ResizeArray(sender, e, ref fv2String.materialParameterEntries, out isSizeChanged));
+            materialParameterTextbox.KeyDown += new KeyEventHandler((object sender, KeyEventArgs e) => UpdateMaterialParameterControls(isSizeChanged, e));
             groupBox1.Controls.Add(materialParameterTextbox);
 
-            UpdateMaterialParameterControls();
+            UpdateMaterialParameterControls(true);
         } //ShowMaterialParameterControls
 
         private void ShowStaticDataControls()
         {
+            bool isSizeChanged = false;
+
             groupBox1.Controls.Clear();
 
             Label hideMeshGroupLabel = new Label();
@@ -192,10 +216,10 @@ namespace FvTwool
             TextBox hideMeshGroupTextBox = new TextBox();
             hideMeshGroupTextBox.Location = new System.Drawing.Point(hideMeshGroupLabel.Right + 10, 16);
             hideMeshGroupTextBox.Text = fv2String.hideMeshGroupEntries.Length.ToString();
-            hideMeshGroupTextBox.Leave += new EventHandler((object sender, EventArgs e) => ResizeStringArray(sender, e, ref fv2String.hideMeshGroupEntries));
-            hideMeshGroupTextBox.Leave += new EventHandler((object sender, EventArgs e) => UpdateStaticDataControls());
-            hideMeshGroupTextBox.KeyDown += new KeyEventHandler((object sender, KeyEventArgs e) => ResizeStringArray(sender, e, ref fv2String.hideMeshGroupEntries));
-            hideMeshGroupTextBox.KeyDown += new KeyEventHandler((object sender, KeyEventArgs e) => UpdateStaticDataControls(e));
+            hideMeshGroupTextBox.LostFocus += new EventHandler((object sender, EventArgs e) => ResizeStringArray(sender, e, ref fv2String.hideMeshGroupEntries, out isSizeChanged));
+            hideMeshGroupTextBox.LostFocus += new EventHandler((object sender, EventArgs e) => UpdateStaticDataControls(isSizeChanged));
+            hideMeshGroupTextBox.KeyDown += new KeyEventHandler((object sender, KeyEventArgs e) => ResizeStringArray(sender, e, ref fv2String.hideMeshGroupEntries, out isSizeChanged));
+            hideMeshGroupTextBox.KeyDown += new KeyEventHandler((object sender, KeyEventArgs e) => UpdateStaticDataControls(isSizeChanged, e));
             groupBox1.Controls.Add(hideMeshGroupTextBox);
 
             Label showMeshGroupLabel = new Label();
@@ -207,10 +231,10 @@ namespace FvTwool
             TextBox showMeshGroupTextBox = new TextBox();
             showMeshGroupTextBox.Location = new System.Drawing.Point(showMeshGroupLabel.Right + 10, 16 + CONTROL_SPACING);
             showMeshGroupTextBox.Text = fv2String.showMeshGroupEntries.Length.ToString();
-            showMeshGroupTextBox.Leave += new EventHandler((object sender, EventArgs e) => ResizeStringArray(sender, e, ref fv2String.showMeshGroupEntries));
-            showMeshGroupTextBox.Leave += new EventHandler((object sender, EventArgs e) => UpdateStaticDataControls());
-            showMeshGroupTextBox.KeyDown += new KeyEventHandler((object sender, KeyEventArgs e) => ResizeStringArray(sender, e, ref fv2String.showMeshGroupEntries));
-            showMeshGroupTextBox.KeyDown += new KeyEventHandler((object sender, KeyEventArgs e) => UpdateStaticDataControls(e));
+            showMeshGroupTextBox.LostFocus += new EventHandler((object sender, EventArgs e) => ResizeStringArray(sender, e, ref fv2String.showMeshGroupEntries, out isSizeChanged));
+            showMeshGroupTextBox.LostFocus += new EventHandler((object sender, EventArgs e) => UpdateStaticDataControls(isSizeChanged));
+            showMeshGroupTextBox.KeyDown += new KeyEventHandler((object sender, KeyEventArgs e) => ResizeStringArray(sender, e, ref fv2String.showMeshGroupEntries, out isSizeChanged));
+            showMeshGroupTextBox.KeyDown += new KeyEventHandler((object sender, KeyEventArgs e) => UpdateStaticDataControls(isSizeChanged, e));
             groupBox1.Controls.Add(showMeshGroupTextBox);
 
             Label textureSwapLabel = new Label();
@@ -222,10 +246,10 @@ namespace FvTwool
             TextBox textureSwapTextBox = new TextBox();
             textureSwapTextBox.Location = new System.Drawing.Point(textureSwapLabel.Right + 10, 16 + CONTROL_SPACING * 2);
             textureSwapTextBox.Text = fv2String.textureSwapEntries.Length.ToString();
-            textureSwapTextBox.Leave += new EventHandler((object sender, EventArgs e) => ResizeArray(sender, e, ref fv2String.textureSwapEntries));
-            textureSwapTextBox.Leave += new EventHandler((object sender, EventArgs e) => UpdateStaticDataControls());
-            textureSwapTextBox.KeyDown += new KeyEventHandler((object sender, KeyEventArgs e) => ResizeArray(sender, e, ref fv2String.textureSwapEntries));
-            textureSwapTextBox.KeyDown += new KeyEventHandler((object sender, KeyEventArgs e) => UpdateStaticDataControls(e));
+            textureSwapTextBox.LostFocus += new EventHandler((object sender, EventArgs e) => ResizeArray(sender, e, ref fv2String.textureSwapEntries, out isSizeChanged));
+            textureSwapTextBox.LostFocus += new EventHandler((object sender, EventArgs e) => UpdateStaticDataControls(isSizeChanged));
+            textureSwapTextBox.KeyDown += new KeyEventHandler((object sender, KeyEventArgs e) => ResizeArray(sender, e, ref fv2String.textureSwapEntries, out isSizeChanged));
+            textureSwapTextBox.KeyDown += new KeyEventHandler((object sender, KeyEventArgs e) => UpdateStaticDataControls(isSizeChanged, e));
             groupBox1.Controls.Add(textureSwapTextBox);
 
             Label boneAttachLabel = new Label();
@@ -237,10 +261,10 @@ namespace FvTwool
             TextBox boneAttachTextBox = new TextBox();
             boneAttachTextBox.Location = new System.Drawing.Point(boneAttachLabel.Right + 10, 16 + CONTROL_SPACING * 3);
             boneAttachTextBox.Text = fv2String.boneModelAttachEntries.Length.ToString();
-            boneAttachTextBox.Leave += new EventHandler((object sender, EventArgs e) => ResizeArray(sender, e, ref fv2String.boneModelAttachEntries));
-            boneAttachTextBox.Leave += new EventHandler((object sender, EventArgs e) => UpdateStaticDataControls());
-            boneAttachTextBox.KeyDown += new KeyEventHandler((object sender, KeyEventArgs e) => ResizeArray(sender, e, ref fv2String.boneModelAttachEntries));
-            boneAttachTextBox.KeyDown += new KeyEventHandler((object sender, KeyEventArgs e) => UpdateStaticDataControls(e));
+            boneAttachTextBox.LostFocus += new EventHandler((object sender, EventArgs e) => ResizeArray(sender, e, ref fv2String.boneModelAttachEntries, out isSizeChanged));
+            boneAttachTextBox.LostFocus += new EventHandler((object sender, EventArgs e) => UpdateStaticDataControls(isSizeChanged));
+            boneAttachTextBox.KeyDown += new KeyEventHandler((object sender, KeyEventArgs e) => ResizeArray(sender, e, ref fv2String.boneModelAttachEntries, out isSizeChanged));
+            boneAttachTextBox.KeyDown += new KeyEventHandler((object sender, KeyEventArgs e) => UpdateStaticDataControls(isSizeChanged,e));
             groupBox1.Controls.Add(boneAttachTextBox);
 
             Label cnpAttachLabel = new Label();
@@ -252,29 +276,34 @@ namespace FvTwool
             TextBox cnpAttachTextBox = new TextBox();
             cnpAttachTextBox.Location = new System.Drawing.Point(boneAttachLabel.Right + 10, 16 + CONTROL_SPACING * 4);
             cnpAttachTextBox.Text = fv2String.cnpModelAttachEntries.Length.ToString();
-            cnpAttachTextBox.Leave += new EventHandler((object sender, EventArgs e) => ResizeArray(sender, e, ref fv2String.cnpModelAttachEntries));
-            cnpAttachTextBox.Leave += new EventHandler((object sender, EventArgs e) => UpdateStaticDataControls());
-            cnpAttachTextBox.KeyDown += new KeyEventHandler((object sender, KeyEventArgs e) => ResizeArray(sender, e, ref fv2String.cnpModelAttachEntries));
-            cnpAttachTextBox.KeyDown += new KeyEventHandler((object sender, KeyEventArgs e) => UpdateStaticDataControls(e));
+            cnpAttachTextBox.LostFocus += new EventHandler((object sender, EventArgs e) => ResizeArray(sender, e, ref fv2String.cnpModelAttachEntries, out isSizeChanged));
+            cnpAttachTextBox.LostFocus += new EventHandler((object sender, EventArgs e) => UpdateStaticDataControls(isSizeChanged));
+            cnpAttachTextBox.KeyDown += new KeyEventHandler((object sender, KeyEventArgs e) => ResizeArray(sender, e, ref fv2String.cnpModelAttachEntries, out isSizeChanged));
+            cnpAttachTextBox.KeyDown += new KeyEventHandler((object sender, KeyEventArgs e) => UpdateStaticDataControls(isSizeChanged, e));
             groupBox1.Controls.Add(cnpAttachTextBox);
 
-            UpdateStaticDataControls();
+            UpdateStaticDataControls(true);
         } //ShowStaticDataControls
 
-        private void ClearVariableDataControls(GroupBox groupBox)
+        private void ClearVariableDataControls(GroupBox groupBox, bool isSizeChanged)
         {
+            if (!isSizeChanged)
+                return;
+
             groupBox.Controls.Clear();
             mainPanel.Controls.Clear();
         } //ClearVariableDataControls
 
-        private void ClearVariableDataControls(GroupBox groupBox, KeyEventArgs e)
+        private void ClearVariableDataControls(GroupBox groupBox, bool isSizeChanged, KeyEventArgs e)
         {
             if (e.KeyValue == 13)
-                ClearVariableDataControls(groupBox);
+                ClearVariableDataControls(groupBox, isSizeChanged);
         } //if
 
         private void ShowVariableDataControls()
         {
+            bool isSizeChanged = false;
+
             groupBox1.Controls.Clear();
 
             ComboBox variableDataSelectionComboBox = new ComboBox();
@@ -289,12 +318,12 @@ namespace FvTwool
             TextBox variableDataTextBox = new TextBox();
             variableDataTextBox.Location = new System.Drawing.Point(variableDataLabel.Right + 10, 16);
             variableDataTextBox.Text = fv2String.variableDataEntries.Length.ToString();
-            variableDataTextBox.Leave += new EventHandler((object sender, EventArgs e) => ResizeArray(sender, e, ref fv2String.variableDataEntries));
-            variableDataTextBox.Leave += new EventHandler((object sender, EventArgs e) => UpdateComboBox(ref variableDataSelectionComboBox));
-            variableDataTextBox.Leave += new EventHandler((object sender, EventArgs e) => ClearVariableDataControls(groupBox2));
-            variableDataTextBox.KeyDown += new KeyEventHandler((object sender, KeyEventArgs e) => ResizeArray(sender, e, ref fv2String.variableDataEntries));
-            variableDataTextBox.KeyDown += new KeyEventHandler((object sender, KeyEventArgs e) => UpdateComboBox(ref variableDataSelectionComboBox, e));
-            variableDataTextBox.KeyDown += new KeyEventHandler((object sender, KeyEventArgs e) => ClearVariableDataControls(groupBox2, e));
+            variableDataTextBox.LostFocus += new EventHandler((object sender, EventArgs e) => ResizeArray(sender, e, ref fv2String.variableDataEntries, out isSizeChanged));
+            variableDataTextBox.LostFocus += new EventHandler((object sender, EventArgs e) => UpdateComboBox(ref variableDataSelectionComboBox, isSizeChanged));
+            variableDataTextBox.LostFocus += new EventHandler((object sender, EventArgs e) => ClearVariableDataControls(groupBox2, isSizeChanged));
+            variableDataTextBox.KeyDown += new KeyEventHandler((object sender, KeyEventArgs e) => ResizeArray(sender, e, ref fv2String.variableDataEntries, out isSizeChanged));
+            variableDataTextBox.KeyDown += new KeyEventHandler((object sender, KeyEventArgs e) => UpdateComboBox(ref variableDataSelectionComboBox, isSizeChanged, e));
+            variableDataTextBox.KeyDown += new KeyEventHandler((object sender, KeyEventArgs e) => ClearVariableDataControls(groupBox2, isSizeChanged, e));
             groupBox1.Controls.Add(variableDataTextBox);
 
             Label variableDataSelectionLabel = new Label();
@@ -306,7 +335,7 @@ namespace FvTwool
             variableDataSelectionComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
             variableDataSelectionComboBox.Location = new System.Drawing.Point(variableDataSelectionLabel.Right + 10, 16 + CONTROL_SPACING + LABEL_SPACING);
             variableDataSelectionComboBox.SelectedIndexChanged += new EventHandler((object sender, EventArgs e) => UpdateVariableDataEntryGroupBox(groupBox2, fv2String.variableDataEntries[variableDataSelectionComboBox.SelectedIndex]));
-            variableDataSelectionComboBox.SelectedIndexChanged += new EventHandler((object sender, EventArgs e) => UpdateVariableDataEntryControls(fv2String.variableDataEntries[variableDataSelectionComboBox.SelectedIndex]));
+            variableDataSelectionComboBox.SelectedIndexChanged += new EventHandler((object sender, EventArgs e) => UpdateVariableDataEntryControls(fv2String.variableDataEntries[variableDataSelectionComboBox.SelectedIndex], true));
             groupBox1.Controls.Add(variableDataSelectionComboBox);
 
             groupBox2.AutoSize = true;
@@ -314,7 +343,7 @@ namespace FvTwool
             groupBox2.Text = "Selected Entry Data";
             groupBox1.Controls.Add(groupBox2);
 
-            UpdateComboBox(ref variableDataSelectionComboBox);
+            UpdateComboBox(ref variableDataSelectionComboBox, true);
 
             mainPanel.Controls.Clear();
         } //ShowVariableDataControls
@@ -342,22 +371,28 @@ namespace FvTwool
             } //switch
         } //targetComboBox_SelectedIndexChanged
 
-        private void UpdateComboBox(ref ComboBox comboBox)
+        private void UpdateComboBox(ref ComboBox comboBox, bool isSizeChanged)
         {
+            if (!isSizeChanged)
+                return;
+
             comboBox.Items.Clear();
 
             for (int i = 0; i < fv2String.variableDataEntries.Length; i++)
                 comboBox.Items.Add(i);
         } //UpdateComboBox
 
-        private void UpdateComboBox(ref ComboBox comboBox, KeyEventArgs e)
+        private void UpdateComboBox(ref ComboBox comboBox, bool isSizeChanged, KeyEventArgs e)
         {
             if(e.KeyValue == 13)
-                UpdateComboBox(ref comboBox);
+                UpdateComboBox(ref comboBox, isSizeChanged);
         } //UpdateComboBox
 
-        private void UpdateExternalFileControls()
+        private void UpdateExternalFileControls(bool isSizeChanged)
         {
+            if (!isSizeChanged)
+                return;
+
             mainPanel.Controls.Clear();
 
             int heightOffset = 16;
@@ -385,14 +420,17 @@ namespace FvTwool
             } //if
         } //UpdateExternalFileControls
 
-        private void UpdateExternalFileControls(KeyEventArgs e)
+        private void UpdateExternalFileControls(bool isSizeChanged, KeyEventArgs e)
         {
             if (e.KeyValue == 13)
-                UpdateExternalFileControls();
+                UpdateExternalFileControls(isSizeChanged);
         } //UpdateExternalFileControls
 
-        private void UpdateMaterialParameterControls()
+        private void UpdateMaterialParameterControls(bool isSizeChanged)
         {
+            if (!isSizeChanged)
+                return;
+
             mainPanel.Controls.Clear();
 
             int heightOffset = 16;
@@ -467,10 +505,10 @@ namespace FvTwool
             } //if
         } //UpdateMaterialParameterControls
 
-        private void UpdateMaterialParameterControls(KeyEventArgs e)
+        private void UpdateMaterialParameterControls(bool isSizeChanged, KeyEventArgs e)
         {
             if (e.KeyValue == 13)
-                UpdateMaterialParameterControls();
+                UpdateMaterialParameterControls(isSizeChanged);
         } //UpdateMaterialParameterControls
 
         private void UpdateIndex(object sender, EventArgs e, ref int i)
@@ -489,17 +527,36 @@ namespace FvTwool
                 i = textValue;
         } //UpdateInt
 
-        private void UpdateInt(object sender, EventArgs e, ref int i)
+        private void UpdateInt(object sender, EventArgs e, ref int i, out bool isSizeChanged)
         {
+            isSizeChanged = false;
+
+            if(e is KeyEventArgs)
+            {
+                KeyEventArgs ke = e as KeyEventArgs;
+
+                if (ke.KeyValue != 13)
+                    return;
+            } //if
+
             int textValue;
             TextBox textBox = (TextBox)sender;
 
             if (Int32.TryParse(textBox.Text, out textValue))
-                i = textValue;
+            {
+                if (i != textValue)
+                {
+                    i = textValue;
+                    isSizeChanged = true;
+                } //if
+            } //if
         } //UpdateInt
 
-        private void UpdateStaticDataControls()
+        private void UpdateStaticDataControls(bool isSizeChanged)
         {
+            if (!isSizeChanged)
+                return;
+
             mainPanel.Controls.Clear();
 
             int heightOffset = 16;
@@ -796,10 +853,10 @@ namespace FvTwool
             } //if
         } //UpdateStaticDataControls
 
-        private void UpdateStaticDataControls(KeyEventArgs e)
+        private void UpdateStaticDataControls(bool isSizeChanged, KeyEventArgs e)
         {
             if (e.KeyValue == 13)
-                UpdateStaticDataControls();
+                UpdateStaticDataControls(isSizeChanged);
         } //UpdateStaticDataControls
 
         private void UpdateString(object sender, EventArgs e, ref string str)
@@ -809,8 +866,11 @@ namespace FvTwool
             str = textBox.Text;
         } //UpdateString
 
-        private void UpdateVariableDataEntryControls(Fv2String.VariableDataEntry variableDataEntry)
+        private void UpdateVariableDataEntryControls(Fv2String.VariableDataEntry variableDataEntry, bool isSizeChanged)
         {
+            if (!isSizeChanged)
+                return;
+
             mainPanel.Controls.Clear();
 
             int groupBoxHeightOffset = 16;
@@ -1100,14 +1160,16 @@ namespace FvTwool
             } //for
         } //UpdateVariableDataEntryControls
 
-        private void UpdateVariableDataEntryControls(Fv2String.VariableDataEntry variableDataEntry, KeyEventArgs e)
+        private void UpdateVariableDataEntryControls(Fv2String.VariableDataEntry variableDataEntry, bool isSizeChanged, KeyEventArgs e)
         {
             if (e.KeyValue == 13)
-                UpdateVariableDataEntryControls(variableDataEntry);
+                UpdateVariableDataEntryControls(variableDataEntry, isSizeChanged);
         } //UpdateVariableDataEntryControls
 
         private void UpdateVariableDataEntryGroupBox(GroupBox groupBox, Fv2String.VariableDataEntry variableDataEntry)
         {
+            bool isSizeChanged = false;
+
             groupBox.Controls.Clear();
 
             GroupBox subGroupBox = new GroupBox();
@@ -1133,18 +1195,18 @@ namespace FvTwool
             TextBox entryCountTextBox = new TextBox();
             entryCountTextBox.Location = new System.Drawing.Point(entryCountLabel.Right + 10, 16 + CONTROL_SPACING);
             entryCountTextBox.Text = variableDataEntry.variableDataSubEntries.Length.ToString();
-            entryCountTextBox.Leave += new EventHandler((object sender0, EventArgs e0) => ResizeArray(sender0, e0, ref variableDataEntry.variableDataSubEntries));
-            entryCountTextBox.Leave += new EventHandler((object sender0, EventArgs e0) => ResizeVariableDataEntryArray(sender0, e0, variableDataEntry, "meshgroups"));
-            entryCountTextBox.Leave += new EventHandler((object sender0, EventArgs e0) => ResizeVariableDataEntryArray(sender0, e0, variableDataEntry, "textureswaps"));
-            entryCountTextBox.Leave += new EventHandler((object sender0, EventArgs e0) => ResizeVariableDataEntryArray(sender0, e0, variableDataEntry, "boneattachments"));
-            entryCountTextBox.Leave += new EventHandler((object sender0, EventArgs e0) => ResizeVariableDataEntryArray(sender0, e0, variableDataEntry, "cnpattachments"));
-            entryCountTextBox.Leave += new EventHandler((object sender0, EventArgs e0) => UpdateVariableDataEntryControls(variableDataEntry));
-            entryCountTextBox.KeyDown += new KeyEventHandler((object sender0, KeyEventArgs e0) => ResizeArray(sender0, e0, ref variableDataEntry.variableDataSubEntries));
+            entryCountTextBox.LostFocus += new EventHandler((object sender0, EventArgs e0) => ResizeArray(sender0, e0, ref variableDataEntry.variableDataSubEntries, out isSizeChanged));
+            entryCountTextBox.LostFocus += new EventHandler((object sender0, EventArgs e0) => ResizeVariableDataEntryArray(sender0, e0, variableDataEntry, "meshgroups"));
+            entryCountTextBox.LostFocus += new EventHandler((object sender0, EventArgs e0) => ResizeVariableDataEntryArray(sender0, e0, variableDataEntry, "textureswaps"));
+            entryCountTextBox.LostFocus += new EventHandler((object sender0, EventArgs e0) => ResizeVariableDataEntryArray(sender0, e0, variableDataEntry, "boneattachments"));
+            entryCountTextBox.LostFocus += new EventHandler((object sender0, EventArgs e0) => ResizeVariableDataEntryArray(sender0, e0, variableDataEntry, "cnpattachments"));
+            entryCountTextBox.LostFocus += new EventHandler((object sender0, EventArgs e0) => UpdateVariableDataEntryControls(variableDataEntry, isSizeChanged));
+            entryCountTextBox.KeyDown += new KeyEventHandler((object sender0, KeyEventArgs e0) => ResizeArray(sender0, e0, ref variableDataEntry.variableDataSubEntries, out isSizeChanged));
             entryCountTextBox.KeyDown += new KeyEventHandler((object sender0, KeyEventArgs e0) => ResizeVariableDataEntryArray(sender0, e0, variableDataEntry, "meshgroups"));
             entryCountTextBox.KeyDown += new KeyEventHandler((object sender0, KeyEventArgs e0) => ResizeVariableDataEntryArray(sender0, e0, variableDataEntry, "textureswaps"));
             entryCountTextBox.KeyDown += new KeyEventHandler((object sender0, KeyEventArgs e0) => ResizeVariableDataEntryArray(sender0, e0, variableDataEntry, "boneattachments"));
             entryCountTextBox.KeyDown += new KeyEventHandler((object sender0, KeyEventArgs e0) => ResizeVariableDataEntryArray(sender0, e0, variableDataEntry, "cnpattachments"));
-            entryCountTextBox.KeyDown += new KeyEventHandler((object sender0, KeyEventArgs e0) => UpdateVariableDataEntryControls(variableDataEntry, e0));
+            entryCountTextBox.KeyDown += new KeyEventHandler((object sender0, KeyEventArgs e0) => UpdateVariableDataEntryControls(variableDataEntry, isSizeChanged, e0));
             groupBox.Controls.Add(entryCountTextBox);
 
             Label meshGroupLabel = new Label();
@@ -1153,14 +1215,15 @@ namespace FvTwool
             meshGroupLabel.Text = "Mesh Group Count";
             groupBox.Controls.Add(meshGroupLabel);
 
-            TextBox meshGroupTextBox = new TextBox();
+            TextBox meshGroupTextBox = new TextBox(); //HERE
             meshGroupTextBox.Location = new System.Drawing.Point(meshGroupLabel.Right + 10, 16 + CONTROL_SPACING * 2);
             meshGroupTextBox.Text = variableDataEntry.meshGroupEntryCount.ToString();
-            meshGroupTextBox.TextChanged += new EventHandler((object sender0, EventArgs e0) => UpdateInt(sender0, e0, ref variableDataEntry.meshGroupEntryCount));
-            meshGroupTextBox.Leave += new EventHandler((object sender0, EventArgs e0) => ResizeVariableDataEntryArray(sender0, e0, variableDataEntry, "meshgroups"));
-            meshGroupTextBox.Leave += new EventHandler((object sender0, EventArgs e0) => UpdateVariableDataEntryControls(variableDataEntry));
+            meshGroupTextBox.LostFocus += new EventHandler((object sender0, EventArgs e0) => UpdateInt(sender0, e0, ref variableDataEntry.meshGroupEntryCount, out isSizeChanged));
+            meshGroupTextBox.LostFocus += new EventHandler((object sender0, EventArgs e0) => ResizeVariableDataEntryArray(sender0, e0, variableDataEntry, "meshgroups"));
+            meshGroupTextBox.LostFocus += new EventHandler((object sender0, EventArgs e0) => UpdateVariableDataEntryControls(variableDataEntry, isSizeChanged));
+            meshGroupTextBox.KeyDown += new KeyEventHandler((object sender0, KeyEventArgs e0) => UpdateInt(sender0, e0, ref variableDataEntry.meshGroupEntryCount, out isSizeChanged));
             meshGroupTextBox.KeyDown += new KeyEventHandler((object sender0, KeyEventArgs e0) => ResizeVariableDataEntryArray(sender0, e0, variableDataEntry, "meshgroups"));
-            meshGroupTextBox.KeyDown += new KeyEventHandler((object sender0, KeyEventArgs e0) => UpdateVariableDataEntryControls(variableDataEntry, e0));
+            meshGroupTextBox.KeyDown += new KeyEventHandler((object sender0, KeyEventArgs e0) => UpdateVariableDataEntryControls(variableDataEntry, isSizeChanged, e0));
             groupBox.Controls.Add(meshGroupTextBox);
 
             Label textureSwapLabel = new Label();
@@ -1172,11 +1235,12 @@ namespace FvTwool
             TextBox textureSwapTextBox = new TextBox();
             textureSwapTextBox.Location = new System.Drawing.Point(textureSwapLabel.Right + 10, 16 + CONTROL_SPACING * 3);
             textureSwapTextBox.Text = variableDataEntry.textureSwapEntryCount.ToString();
-            textureSwapTextBox.TextChanged += new EventHandler((object sender0, EventArgs e0) => UpdateInt(sender0, e0, ref variableDataEntry.textureSwapEntryCount));
-            textureSwapTextBox.Leave += new EventHandler((object sender0, EventArgs e0) => ResizeVariableDataEntryArray(sender0, e0, variableDataEntry, "textureswaps"));
-            textureSwapTextBox.Leave += new EventHandler((object sender0, EventArgs e0) => UpdateVariableDataEntryControls(variableDataEntry));
+            textureSwapTextBox.LostFocus += new EventHandler((object sender0, EventArgs e0) => UpdateInt(sender0, e0, ref variableDataEntry.textureSwapEntryCount, out isSizeChanged));
+            textureSwapTextBox.LostFocus += new EventHandler((object sender0, EventArgs e0) => ResizeVariableDataEntryArray(sender0, e0, variableDataEntry, "textureswaps"));
+            textureSwapTextBox.LostFocus += new EventHandler((object sender0, EventArgs e0) => UpdateVariableDataEntryControls(variableDataEntry, isSizeChanged));
+            textureSwapTextBox.KeyDown += new KeyEventHandler((object sender0, KeyEventArgs e0) => UpdateInt(sender0, e0, ref variableDataEntry.textureSwapEntryCount, out isSizeChanged));
             textureSwapTextBox.KeyDown += new KeyEventHandler((object sender0, KeyEventArgs e0) => ResizeVariableDataEntryArray(sender0, e0, variableDataEntry, "textureswaps"));
-            textureSwapTextBox.KeyDown += new KeyEventHandler((object sender0, KeyEventArgs e0) => UpdateVariableDataEntryControls(variableDataEntry, e0));
+            textureSwapTextBox.KeyDown += new KeyEventHandler((object sender0, KeyEventArgs e0) => UpdateVariableDataEntryControls(variableDataEntry, isSizeChanged, e0));
             groupBox.Controls.Add(textureSwapTextBox);
 
             Label boneAttachLabel = new Label();
@@ -1188,11 +1252,12 @@ namespace FvTwool
             TextBox boneAttachTextBox = new TextBox();
             boneAttachTextBox.Location = new System.Drawing.Point(boneAttachLabel.Right + 10, 16 + CONTROL_SPACING * 4);
             boneAttachTextBox.Text = variableDataEntry.boneModelAttachEntryCount.ToString();
-            boneAttachTextBox.TextChanged += new EventHandler((object sender0, EventArgs e0) => UpdateInt(sender0, e0, ref variableDataEntry.boneModelAttachEntryCount));
-            boneAttachTextBox.Leave += new EventHandler((object sender0, EventArgs e0) => ResizeVariableDataEntryArray(sender0, e0, variableDataEntry, "boneattachments"));
-            boneAttachTextBox.Leave += new EventHandler((object sender0, EventArgs e0) => UpdateVariableDataEntryControls(variableDataEntry));
+            boneAttachTextBox.LostFocus += new EventHandler((object sender0, EventArgs e0) => UpdateInt(sender0, e0, ref variableDataEntry.boneModelAttachEntryCount, out isSizeChanged));
+            boneAttachTextBox.LostFocus += new EventHandler((object sender0, EventArgs e0) => ResizeVariableDataEntryArray(sender0, e0, variableDataEntry, "boneattachments"));
+            boneAttachTextBox.LostFocus += new EventHandler((object sender0, EventArgs e0) => UpdateVariableDataEntryControls(variableDataEntry, isSizeChanged));
+            boneAttachTextBox.KeyDown += new KeyEventHandler((object sender0, KeyEventArgs e0) => UpdateInt(sender0, e0, ref variableDataEntry.boneModelAttachEntryCount, out isSizeChanged));
             boneAttachTextBox.KeyDown += new KeyEventHandler((object sender0, KeyEventArgs e0) => ResizeVariableDataEntryArray(sender0, e0, variableDataEntry, "boneattachments"));
-            boneAttachTextBox.KeyDown += new KeyEventHandler((object sender0, KeyEventArgs e0) => UpdateVariableDataEntryControls(variableDataEntry, e0));
+            boneAttachTextBox.KeyDown += new KeyEventHandler((object sender0, KeyEventArgs e0) => UpdateVariableDataEntryControls(variableDataEntry, isSizeChanged, e0));
             groupBox.Controls.Add(boneAttachTextBox);
 
             Label cnpAttachLabel = new Label();
@@ -1204,11 +1269,12 @@ namespace FvTwool
             TextBox cnpAttachTextBox = new TextBox();
             cnpAttachTextBox.Location = new System.Drawing.Point(boneAttachLabel.Right + 10, 16 + CONTROL_SPACING * 5);
             cnpAttachTextBox.Text = variableDataEntry.cnpModelAttachEntryCount.ToString();
-            cnpAttachTextBox.TextChanged += new EventHandler((object sender0, EventArgs e0) => UpdateInt(sender0, e0, ref variableDataEntry.cnpModelAttachEntryCount));
-            cnpAttachTextBox.Leave += new EventHandler((object sender0, EventArgs e0) => ResizeVariableDataEntryArray(sender0, e0, variableDataEntry, "cnpattachments"));
-            cnpAttachTextBox.Leave += new EventHandler((object sender0, EventArgs e0) => UpdateVariableDataEntryControls(variableDataEntry));
+            cnpAttachTextBox.LostFocus += new EventHandler((object sender0, EventArgs e0) => UpdateInt(sender0, e0, ref variableDataEntry.cnpModelAttachEntryCount, out isSizeChanged));
+            cnpAttachTextBox.LostFocus += new EventHandler((object sender0, EventArgs e0) => ResizeVariableDataEntryArray(sender0, e0, variableDataEntry, "cnpattachments"));
+            cnpAttachTextBox.LostFocus += new EventHandler((object sender0, EventArgs e0) => UpdateVariableDataEntryControls(variableDataEntry, isSizeChanged));
+            cnpAttachTextBox.KeyDown += new KeyEventHandler((object sender0, KeyEventArgs e0) => UpdateInt(sender0, e0, ref variableDataEntry.cnpModelAttachEntryCount, out isSizeChanged));
             cnpAttachTextBox.KeyDown += new KeyEventHandler((object sender0, KeyEventArgs e0) => ResizeVariableDataEntryArray(sender0, e0, variableDataEntry, "cnpattachments"));
-            cnpAttachTextBox.KeyDown += new KeyEventHandler((object sender0, KeyEventArgs e0) => UpdateVariableDataEntryControls(variableDataEntry, e0));
+            cnpAttachTextBox.KeyDown += new KeyEventHandler((object sender0, KeyEventArgs e0) => UpdateVariableDataEntryControls(variableDataEntry, isSizeChanged, e0));
             groupBox.Controls.Add(cnpAttachTextBox);
         } //UpdateVariableDataEntryGroupBox
 
